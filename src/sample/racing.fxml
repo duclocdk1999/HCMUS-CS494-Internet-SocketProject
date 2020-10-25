@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <ImageView fitHeight="575.0" fitWidth="800.0" pickOnBounds="true">
+      <Image url="@resources/background/background-waitroom.png" />
+   </ImageView>
+   <Button onAction="#goToMenuScene" mnemonicParsing="false" styleClass="button-text" text="về nhà" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+      <stylesheets>
+         <URL value="@css/root.css" />
+         <URL value="@css/button.css" />
+      </stylesheets>
+   </Button>
+</AnchorPane>

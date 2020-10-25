@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="575.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <ImageView fitHeight="575.0" fitWidth="800.0" pickOnBounds="true">
+      <Image url="@resources/background/background-waitroom.png" />
+   </ImageView>
+   <Text layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="bản tin đường phố" textAlignment="CENTER" wrappingWidth="800.0">
+      <styleClass>
+         <String fx:value="heading-shadow" />
+         <String fx:value="rules-heading" />
+      </styleClass>
+   </Text>
+   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+   <AnchorPane layoutX="72.5" layoutY="160.0" prefHeight="0.0" prefWidth="0.0">
+      <ImageView fitHeight="325.0" fitWidth="655.0" pickOnBounds="true">
+         <Image url="@resources/images/news-board.png" />
+      </ImageView>
+      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <Image url="@resources/images/paper-w-txt.png" />
+      </ImageView>
+      <VBox prefWidth="100.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <Text styleClass="beige-text" strokeType="OUTSIDE" strokeWidth="0.0" text="cách chơi" wrappingWidth="450.0">
+         </Text>
+         <HBox styleClass="beige-text">
+            <Text styleClass="beige-text" strokeType="OUTSIDE" strokeWidth="0.0" text="1. PHÒNG THI ĐƯA RA ">
+            </Text>
+            <Text layoutX="10.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="mustard-text" text="2 CON SỐ ">
+            </Text>
+            <Text styleClass="beige-text" layoutX="460.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="VÀ ">
+            </Text>
+            <Text layoutX="460.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="mustard-text" text="1 PHÉP TÍNH">
+            </Text>
+         </HBox>
+         <Text styleClass="beige-text" layoutX="10.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2. NGƯỜI CHƠI NHẬP ĐÁP ÁN" wrappingWidth="450.0">
+         </Text>
+      </VBox>
+      <VBox layoutX="30.0" layoutY="30.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
+         <Text styleClass="beige-text" strokeType="OUTSIDE" strokeWidth="0.0" text="CÁCH TÍNH ĐIỂM">
+         </Text>
+         <Text styleClass="beige-text" layoutX="10.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- ĐÁP ÁN SAI: -1 BƯỚC">
+         </Text>
+         <Text styleClass="beige-text" layoutX="10.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- ĐÁP ÁN ĐÚNG: +1 BƯỚC">
+         </Text>
+         <Text styleClass="beige-text" layoutX="10.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- ĐÁP ÁN ĐÚNG VÀ NHANH NHẤT: +(TỔNG SỐ BƯỚC BỊ TRỪ+1)">
+         </Text>
+      </VBox>
+   </AnchorPane>
+   <Button onAction="#goToMenuScene" mnemonicParsing="false" styleClass="button-text" text="về nhà" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
+      <stylesheets>
+         <URL value="@css/root.css" />
+         <URL value="@css/button.css" />
+      </stylesheets>
+   </Button>
+</AnchorPane>
