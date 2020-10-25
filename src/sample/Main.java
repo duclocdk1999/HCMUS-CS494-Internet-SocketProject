@@ -40,12 +40,17 @@ public class Main extends Application {
         Label label3 = new Label("Register");
         Label label4 = new Label("Waiting");
         Label label5 = new Label("Gameplay");
+        
         Button button1 = new Button("lên xe");
         Button button2 = new Button("luật chơi");
         Button button3 = new Button("tắt máy");
         Button button4 = new Button("về nhà");
-
-        button1.setOnAction(e -> primaryStage.setScene(scene3));
+        
+        button1.setOnAction(e -> 
+        {
+        	System.out.println("button pressed!");
+        	primaryStage.setScene(scene3);
+        });
         button2.setOnAction(e -> primaryStage.setScene(scene2));
         button3.setOnAction(e -> primaryStage.close());
         button4.setOnAction(e -> primaryStage.setScene(scene1));
@@ -82,7 +87,7 @@ public class Main extends Application {
         // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
         scene6 = new Scene(rootMessage, 800, 575);
 
-        primaryStage.setScene(scene6);
+        primaryStage.setScene(scene1);
         primaryStage.show();
     }
 }
