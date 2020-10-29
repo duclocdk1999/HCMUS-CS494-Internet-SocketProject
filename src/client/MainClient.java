@@ -1,17 +1,14 @@
-package sample;
+package client;
 
 import javafx.application.Application;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 // get the functionalities for JavaFX through Application
-public class Main extends Application {
+public class MainClient extends Application {
 
     Scene scene1, scene2, scene3, scene4, scene5, scene6;
     // The entire window is called stage, content inside the stage is the scene, in scene we will put the GUI => Stage and Scene methodlogy
@@ -33,27 +30,6 @@ public class Main extends Application {
         Parent rootMessage = FXMLLoader.load(getClass().getResource("message-scene.fxml"));
         primaryStage.setTitle("RACING ARENA - DAU TRUONG XE CO");
         primaryStage.setResizable(false);
-
-        // plain string that user will not be interacting with
-        Label label1 = new Label("Start menu");
-        Label label2 = new Label("Rules");
-        Label label3 = new Label("Register");
-        Label label4 = new Label("Waiting");
-        Label label5 = new Label("Gameplay");
-        
-        Button button1 = new Button("lên xe");
-        Button button2 = new Button("luật chơi");
-        Button button3 = new Button("tắt máy");
-        Button button4 = new Button("về nhà");
-        
-        button1.setOnAction(e -> 
-        {
-        	System.out.println("button pressed!");
-        	primaryStage.setScene(scene3);
-        });
-        button2.setOnAction(e -> primaryStage.setScene(scene2));
-        button3.setOnAction(e -> primaryStage.close());
-        button4.setOnAction(e -> primaryStage.setScene(scene1));
 
         // Layout 1
         root.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
