@@ -5,8 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class ClientHandler extends Thread {
@@ -14,49 +18,52 @@ public class ClientHandler extends Thread {
 	private final DataInputStream inputStream;
 	private final DataOutputStream outputStream;
 	private Socket client;
+	private Player player;
 	
-	private String name;
-	private Integer score;
-	
-	private static Map<String, Integer> nameScoreMap;						// name (String) --> score (Integer)	
-	private static Map<Socket, String> clientNameMap;						// client (Socket) --> name (String)
+	private static Map<Socket, Player> socketPlayerMap;						// client (Socket) --> name (String)
 	private static int number01 = 0, number02 = 0, operatorIndex = 0;
 	private static String operators;	
-	// --------------------------------------------------------------------
+	// -----------------------------------------------------------------------------
 	public ClientHandler(Socket client) throws IOException {
 		
 		this.client = client;
 		this.inputStream = new DataInputStream(client.getInputStream());
 		this.outputStream = new DataOutputStream(client.getOutputStream());
-		this.score = 0;
 		
-		if (clientNameMap == null || nameScoreMap == null || operators == null) {
-			clientNameMap = new HashMap<>();
-			nameScoreMap = new HashMap<>();
+		if (socketPlayerMap == null || operators == null) {
+			socketPlayerMap = new HashMap<>();
 			operators = "+-*/%";
 		}
 		else {
-			this.name = clientNameMap.get(this.client);
-			this.score = nameScoreMap.get(this.name);
-			if (this.score == null) {
-				this.score = 0;
-			}
+			this.player = socketPlayerMap.get(this.client);
 		}
 	}
-	// --------------------------------------------------------------------
+	// -----------------------------------------------------------------------------
+	private boolean isRegistered(String name) {
+		
+		for (Entry<Socket, Player> entry: ClientHandler.socketPlayerMap.entrySet()) {
+			if (entry.getValue().getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	// -----------------------------------------------------------------------------
 	public void register() throws IOException {
 		
-		if (this.name != null) {
+		if (this.player != null) {
 			return;
 		}
+		
+		String name = null;
 		do {
 			// get name from the client, push it to server queue
-			this.name = this.inputStream.readUTF();
+			name = this.inputStream.readUTF();
 			
 			// check if name is already registered
-			if (!ClientHandler.clientNameMap.containsKey(this.client)) {
-				ClientHandler.clientNameMap.put(this.client, this.name);
-				ClientHandler.nameScoreMap.put(this.name, 0);
+			if (!isRegistered(name)) {
+				this.player = new Player(name, 0);
+				ClientHandler.socketPlayerMap.put(this.client, this.player);
 
 				this.outputStream.writeUTF("sucessful");
 				break;
@@ -65,34 +72,41 @@ public class ClientHandler extends Thread {
 				this.outputStream.writeUTF("failed");
 			}
 		}
-		while (ClientHandler.clientNameMap.containsKey(this.client));
+		while (isRegistered(name));
 	}
-	// -------------------------------------------------------------
-	private boolean test(Integer num01, Integer num02, Integer operatorIndex, Integer answer) {
+	// -----------------------------------------------------------------------------
+	private boolean test(Integer num01, Integer num02, Integer operatorIndex, String answerString) {
 		
-		Integer expectedAnswer = 0;
-		switch (operatorIndex) {
-		case 0:
-			expectedAnswer = num01 + num02;
-			break;
-		case 1:
-			expectedAnswer = num01 - num02;
-			break;
-		case 2:
-			expectedAnswer = num01 * num02;
-			break;
-		case 3:
-			expectedAnswer = num01 / num02;
-			break;
-		case 4:
-			expectedAnswer = num01 % num02;
-			break;
+		try {
+			Integer answer = Integer.parseInt(answerString);
+			Integer expectedAnswer = 0;
+			switch (operatorIndex) {
+			case 0:
+				expectedAnswer = num01 + num02;
+				break;
+			case 1:
+				expectedAnswer = num01 - num02;
+				break;
+			case 2:
+				expectedAnswer = num01 * num02;
+				break;
+			case 3:
+				expectedAnswer = num01 / num02;
+				break;
+			case 4:
+				expectedAnswer = num01 % num02;
+				break;
+			}
+			
+			System.out.println("expected aswer: " + expectedAnswer);
+			return (expectedAnswer.equals(answer));
 		}
-		
-		System.out.println("expected aswer: " + expectedAnswer);
-		return (expectedAnswer.equals(answer));
+		catch (NumberFormatException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	// -------------------------------------------------------------
+	// -----------------------------------------------------------------------------
 	public static void generateQuestion() {
 
 		Random random = new Random();
@@ -100,38 +114,40 @@ public class ClientHandler extends Thread {
 		ClientHandler.number02 = random.nextInt(20000) - 10000;
 		ClientHandler.operatorIndex = random.nextInt(5);
 	}
-	// -------------------------------------------------------------
+	// -----------------------------------------------------------------------------
 	@Override
 	public void run() {
 		
 		try {
 			// send current score from server to client
-			this.outputStream.writeUTF(ClientHandler.nameScoreMap.get(this.name).toString());
-
-			// when the users complete journey
-			if (this.score >= 3) {
-				this.outputStream.writeUTF("winning!");
-				this.inputStream.close();
-				this.outputStream.close();
-			}
-			
+			this.outputStream.writeUTF(ClientHandler.socketPlayerMap.get(this.client).getScore().toString());
 			this.outputStream.writeUTF(ClientHandler.number01 + " " + operators.charAt(operatorIndex) + " " + ClientHandler.number02);
 			
 			// get the answer from the client
 			String answer = this.inputStream.readUTF();
-			System.out.println("answer from " + this.name + ": " + answer);
+			System.out.println("answer from " + this.player.getName() + ": " + answer);
 			
 			// check result, modify score
-			if (this.test(ClientHandler.number01, ClientHandler.number02, operatorIndex, Integer.valueOf(answer))) {
-				this.score ++;
+			if (this.test(ClientHandler.number01, ClientHandler.number02, operatorIndex, answer)) {
+				
+				this.player.setScore(this.player.getScore() + 1);
 			}
 			else {
-				this.score --;
+				
+				this.player.setScore(this.player.getScore() - 1);
 			}
-			ClientHandler.nameScoreMap.put(this.name, this.score);
+			ClientHandler.socketPlayerMap.put(this.client, this.player);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.out.println("ClientHandler.run() failed! - " + this.player.getName());
 		}
+	}
+	// -----------------------------------------------------------------------------
+	public static List<Player> getResult() {
+		
+		List<Player> players = new ArrayList<>(ClientHandler.socketPlayerMap.values());
+		Collections.sort(players);
+		return players;
 	}
 }

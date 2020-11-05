@@ -4,10 +4,17 @@ import java.io.IOException;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainServer {
 	
 	private static final int port = 8080;
+	private static final int numberOfQuestions = 2;
+	private static final int numberOfPlayers = 1;
+	private static Socket[] clients = new Socket[numberOfPlayers];
+	private static ClientHandler[] clientHandlers = new ClientHandler[numberOfPlayers];
+	
 	// ----------------------------------------------------------------------------------
 	public static void main(String[] args) throws IOException, InterruptedException {
 		
@@ -16,45 +23,41 @@ public class MainServer {
 		System.out.println("Server is running on port " + port + "...");
 		
 		// establish connection
-		Socket client01 = listener.accept();
-		Socket client02 = listener.accept();
-		Socket client03 = listener.accept();
-
-		ClientHandler thread01 = null;
-		ClientHandler thread02 = null;
-		ClientHandler thread03 = null;
+		for (int i = 0; i < numberOfPlayers; i ++) {
+			clients[i] = (listener.accept());
+		}
 		
-		int numOfQuestions = 3;
-		for (int questionIndex = 0; questionIndex < numOfQuestions; questionIndex ++) {
+		for (int questionIndex = 0; questionIndex < numberOfQuestions; questionIndex ++) {
 			
-			// generate thread for 3 players
-			thread01 = new ClientHandler(client01);
-			thread02 = new ClientHandler(client02);
-			thread03 = new ClientHandler(client03);
+			// generate thread for all players
+			for (int i = 0; i < numberOfPlayers; i ++) {
+				clientHandlers[i] = new ClientHandler(clients[i]);
+			}
 			
 			// register name first before playing
-			thread01.register();
-			thread02.register();
-			thread03.register();
-			
+			for (int i = 0; i < numberOfPlayers; i++) {
+				clientHandlers[i].register();
+			}
+						
 			// generate random question
 			ClientHandler.generateQuestion();
 			
 			// send question to 3 players simultaneously
-			thread01.start();
-			thread02.start();
-			thread03.start();
+			for (int i = 0; i < numberOfPlayers; i++) {
+				clientHandlers[i].start();
+			}
 			
 			// 3 threads has to be completed before new question
-			thread01.join();
-			thread02.join();
-			thread03.join();	
+			for (int i = 0; i < numberOfPlayers; i++) {
+				clientHandlers[i].join();
+			}
 		}
 		
 		// close threads
-		client01.close();
-		client02.close();
-		client03.close();
+		for (int i = 0; i < numberOfPlayers; i++) {
+			clients[i].close();
+		}
+
 		listener.close();
 	}
 	
