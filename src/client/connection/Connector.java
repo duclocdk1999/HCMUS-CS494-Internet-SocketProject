@@ -1,4 +1,4 @@
-package client;
+package client.connection;
 
 import java.io.DataInputStream;
 
@@ -9,20 +9,28 @@ import java.net.UnknownHostException;
 
 import java.util.Scanner;
 
+import shared.Player;
+
 public class Connector {
 	
-	private Socket client;
+	private Socket client;									// socket used to communicate with server
 	private DataInputStream inputStream;
 	private DataOutputStream outputStream;
 	
-	private Player player;
-	private String question;
+	private Player player;									
+	private String question;							
+	
+	private Integer maxNumPlayers;							// maximum number of players
+	private Integer maxNumQuestions;						// maximum number of questions
 	// ------------------------------------------------------------------------------	
 	public Connector(String ip, int port) throws UnknownHostException, IOException {
 		
 		this.client = new Socket(ip, port);
 		this.inputStream = new DataInputStream(this.client.getInputStream());
 		this.outputStream = new DataOutputStream(this.client.getOutputStream());
+		this.maxNumPlayers = 0;
+		this.maxNumQuestions = 0;
+
 		System.out.println("client is connected to " + ip + " port " + port + "...");
 	}
 	// ------------------------------------------------------------------------------
@@ -30,9 +38,15 @@ public class Connector {
 		
 		try {
 			this.outputStream.writeUTF(name);
-			String registerStatus = this.inputStream.readUTF();
-			if (registerStatus.equals("sucessful")) {
+			String info = this.inputStream.readUTF();			// info format:	"successful 1 2 3" | "failed"
+			String status = info.split(" ")[0];
+			
+			if (status.equals("successful")) {
 				this.player = new Player(name, 0);
+				this.maxNumPlayers = Integer.valueOf(info.split(" ")[1]);
+				this.maxNumQuestions = Integer.valueOf(info.split(" ")[2]);
+				
+				System.out.println(name + " register sucessfully");
 				return true;
 			}
 			return false;
@@ -41,7 +55,7 @@ public class Connector {
 
 			e.printStackTrace();
 			return false;
-		}
+		}	
 	}
 	// ------------------------------------------------------------------------------
 	public boolean updateScore() {
@@ -100,14 +114,15 @@ public class Connector {
 		Scanner scanner = new Scanner(System.in);
 		
 		// register
-		while (name == null || !connector.register(name)) {
+		while (name == null || connector.register(name) == false) {
+			System.out.print("Pls enter your name: ");
 			name = scanner.nextLine();
 		}
 
 		// playing game
 		String answer;
 		while (connector.updateScore() && connector.updateQuestion()) {
-			// unable to updateScore mean server disconnected
+			// unable to updateScore means server disconnected
 			
 			System.out.println("score: " + connector.getCurrentScore());			
 			System.out.println("question: " + connector.getCurrentQuestion());

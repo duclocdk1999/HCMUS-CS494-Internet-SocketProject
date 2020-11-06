@@ -1,9 +1,10 @@
 package server;
 
 import java.io.DataInputStream;
+
+
 import java.io.DataOutputStream;
 import java.io.IOException;
-
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,24 +12,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import shared.Player;
+
 import java.util.Random;
 
 public class ClientHandler extends Thread {
-	
+		
 	private final DataInputStream inputStream;
 	private final DataOutputStream outputStream;
 	private Socket client;
 	private Player player;
+	private int maxNumPlayers;
+	private int maxNumQuestions;
 	
 	private static Map<Socket, Player> socketPlayerMap;						// client (Socket) --> name (String)
 	private static int number01 = 0, number02 = 0, operatorIndex = 0;
 	private static String operators;	
+	private static Integer numPlayers;										// number of available successful registered players
 	// -----------------------------------------------------------------------------
-	public ClientHandler(Socket client) throws IOException {
+	public ClientHandler(Socket client, int maxNumPlayers, int maxNumQuestions) throws IOException {
 		
 		this.client = client;
 		this.inputStream = new DataInputStream(client.getInputStream());
 		this.outputStream = new DataOutputStream(client.getOutputStream());
+		this.maxNumPlayers = maxNumPlayers;
+		this.maxNumQuestions = maxNumQuestions;
 		
 		if (socketPlayerMap == null || operators == null) {
 			socketPlayerMap = new HashMap<>();
@@ -37,9 +46,14 @@ public class ClientHandler extends Thread {
 		else {
 			this.player = socketPlayerMap.get(this.client);
 		}
+		
+		if (numPlayers == null) {
+			numPlayers = 0;
+		}
 	}
 	// -----------------------------------------------------------------------------
 	private boolean isRegistered(String name) {
+		// check if a name is registered by other players
 		
 		for (Entry<Socket, Player> entry: ClientHandler.socketPlayerMap.entrySet()) {
 			if (entry.getValue().getName().equals(name)) {
@@ -50,29 +64,30 @@ public class ClientHandler extends Thread {
 	}
 	// -----------------------------------------------------------------------------
 	public void register() throws IOException {
+		// this is called when a user want to register a name
 		
-		if (this.player != null) {
-			return;
-		}
-		
-		String name = null;
-		do {
-			// get name from the client, push it to server queue
-			name = this.inputStream.readUTF();
+		if (this.player == null) {			
 			
-			// check if name is already registered
-			if (!isRegistered(name)) {
-				this.player = new Player(name, 0);
-				ClientHandler.socketPlayerMap.put(this.client, this.player);
-
-				this.outputStream.writeUTF("sucessful");
-				break;
+			String name = null;
+			do {
+				// get name from the client, push it to server queue
+				name = this.inputStream.readUTF();
+				
+				// check if name is already registered
+				if (!isRegistered(name)) {
+					this.player = new Player(name, 0);
+					ClientHandler.socketPlayerMap.put(this.client, this.player);
+					
+					ClientHandler.numPlayers ++;
+					this.outputStream.writeUTF("successful " + this.maxNumPlayers + " " + this.maxNumQuestions + " " + numPlayers);
+					break;
+				}
+				else {
+					this.outputStream.writeUTF("failed");
+				}
 			}
-			else {
-				this.outputStream.writeUTF("failed");
-			}
+			while (isRegistered(name));
 		}
-		while (isRegistered(name));
 	}
 	// -----------------------------------------------------------------------------
 	private boolean test(Integer num01, Integer num02, Integer operatorIndex, String answerString) {

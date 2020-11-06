@@ -2,6 +2,7 @@ package client;
 
 import java.io.IOException;
 
+import client.connection.Connector;
 import javafx.application.Platform;
 
 import javafx.event.ActionEvent;
@@ -28,6 +29,8 @@ public class Controller {
     String[] sceneNames = {
     	"menu.fxml", "rules.fxml", "register.fxml", "waitroom.fxml", "racing.fxml", "message-scene.fxml"
     };
+    
+    Connector connector = null;
     // -----------------------------------------------------------------------------------
     private void goToSceneIndicator(int nextScene, ActionEvent event) throws IOException {
         System.out.println(nextScene);
@@ -43,7 +46,24 @@ public class Controller {
     private void setTextResult(String text) {
         System.out.println(text);
     }
-
+    // -----------------------------------------------------------------------------------
+    @FXML
+    private void onRegisterBtnClick(ActionEvent event) throws IOException, InterruptedException {
+        
+    	String ip = roomTextField.getText();
+    	String name = usernameTextField.getText();
+    	
+    	if (this.connector == null) {
+    		this.connector = new Connector(ip, 8080);
+    	}    	
+    	if (connector.register(name) == false) {
+    		return;
+    	}
+    	else {
+        	goToGameScene(event);    		
+    	}
+    }
+    // -----------------------------------------------------------------------------------
     @FXML
     private void goToMenuScene(ActionEvent event) throws IOException {
         event.consume();

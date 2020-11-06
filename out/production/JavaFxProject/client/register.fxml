@@ -57,7 +57,7 @@
             </HBox.margin>
          </TextField>
       </HBox>
-      <Button fx:id="registerButton" mnemonicParsing="false" styleClass="button-rounded" text="đăng kí">
+      <Button fx:id="registerButton" onAction="#onRegisterBtnClick" mnemonicParsing="false" styleClass="button-rounded" text="đăng kí">
          <stylesheets>
             <URL value="@css/root.css" />
             <URL value="@css/button.css" />
