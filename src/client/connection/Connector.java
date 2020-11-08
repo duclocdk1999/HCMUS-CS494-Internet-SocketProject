@@ -18,10 +18,11 @@ public class Connector {
 	private DataOutputStream outputStream;
 	
 	private Player player;									
-	private String question;							
+	private String question;
 	
 	private Integer maxNumPlayers;							// maximum number of players
 	private Integer maxNumQuestions;						// maximum number of questions
+	private Integer roomId;									
 	// ------------------------------------------------------------------------------	
 	public Connector(String ip, int port) throws UnknownHostException, IOException {
 		
@@ -30,6 +31,7 @@ public class Connector {
 		this.outputStream = new DataOutputStream(this.client.getOutputStream());
 		this.maxNumPlayers = 0;
 		this.maxNumQuestions = 0;
+		this.roomId = 0;
 
 		System.out.println("client is connected to " + ip + " port " + port + "...");
 	}
@@ -38,15 +40,16 @@ public class Connector {
 		
 		try {
 			this.outputStream.writeUTF(name);
-			String info = this.inputStream.readUTF();			// info format:	"successful 1 2 3" | "failed"
+			String info = this.inputStream.readUTF();			// info format:	"successful roomId maxNumPlayers maxNumQuestions" | "failed"
 			String status = info.split(" ")[0];
 			
 			if (status.equals("successful")) {
 				this.player = new Player(name, 0);
-				this.maxNumPlayers = Integer.valueOf(info.split(" ")[1]);
-				this.maxNumQuestions = Integer.valueOf(info.split(" ")[2]);
+				this.roomId = Integer.valueOf(info.split(" ")[1]);
+				this.maxNumPlayers = Integer.valueOf(info.split(" ")[2]);
+				this.maxNumQuestions = Integer.valueOf(info.split(" ")[3]);
 				
-				System.out.println(name + " register sucessfully");
+				System.out.println(name + " register sucessfully, room " + this.roomId);
 				return true;
 			}
 			return false;
