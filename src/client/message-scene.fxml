@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -8,21 +9,26 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="575.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
-    <ImageView fitHeight="575.0" fitWidth="800.0" pickOnBounds="true">
-        <Image url="@resources/background/background-waitroom.png" />
-    </ImageView>
-    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" text="nhờ ý chí kiên cuờng và luôn vững chãi&#xD;bạn đã giành chiến thắng!">
-            <styleClass>
-                <String fx:value="mustard-text" />
-                <String fx:value="message-scene-text" />
-            </styleClass>
-        </Text>
-        <Text fx:id="messageCounter" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
-            <styleClass>
-                <String fx:value="beige-text" />
-                <String fx:value="message-scene-counter" />
-            </styleClass>
-        </Text>
-    </VBox>
+  <stylesheets>
+    <URL value="@css/root.css" />
+    <URL value="@css/button.css" />
+    <URL value="@css/message-scene.css" />
+  </stylesheets>
+  <ImageView fitHeight="575.0" fitWidth="800.0" pickOnBounds="true">
+    <Image url="@resources/background/background-waitroom.png" />
+  </ImageView>
+  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" text="nhờ ý chí kiên cuờng và luôn vững chãi&#xD;bạn đã giành chiến thắng!">
+      <styleClass>
+        <String fx:value="mustard-text" />
+        <String fx:value="message-scene-text" />
+      </styleClass>
+    </Text>
+    <Text fx:id="messageCounter" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
+      <styleClass>
+        <String fx:value="beige-text" />
+        <String fx:value="message-scene-counter" />
+      </styleClass>
+    </Text>
+  </VBox>
 </AnchorPane>

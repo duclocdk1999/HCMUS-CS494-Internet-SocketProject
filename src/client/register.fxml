@@ -13,6 +13,11 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
+   <stylesheets>
+      <URL value="@css/root.css" />
+      <URL value="@css/button.css" />
+      <URL value="@css/register.css" />
+   </stylesheets>
    <ImageView fitHeight="575.0" fitWidth="800.0" pickOnBounds="true">
       <Image url="@resources/background/background-register.png" />
    </ImageView>
@@ -31,10 +36,6 @@
             </styleClass>
          </Text>
          <TextField fx:id="roomTextField" minWidth="-Infinity" promptText="127.0.0.1" styleClass="textfield-style">
-            <stylesheets>
-               <URL value="@css/root.css" />
-               <URL value="@css/register.css" />
-            </stylesheets>
             <HBox.margin>
                <Insets left="20.0" />
             </HBox.margin>
@@ -48,26 +49,14 @@
             </styleClass>
          </Text>
          <TextField fx:id="usernameTextField" minWidth="-Infinity" promptText="kbietdixe" styleClass="textfield-style">
-            <stylesheets>
-               <URL value="@css/root.css" />
-               <URL value="@css/register.css" />
-            </stylesheets>
             <HBox.margin>
                <Insets left="20.0" />
             </HBox.margin>
          </TextField>
       </HBox>
       <Button fx:id="registerButton" onAction="#onRegisterBtnClick" mnemonicParsing="false" styleClass="button-rounded" text="đăng kí">
-         <stylesheets>
-            <URL value="@css/root.css" />
-            <URL value="@css/button.css" />
-         </stylesheets>
       </Button>
    </VBox>
    <Button onAction="#goToMenuScene" mnemonicParsing="false" styleClass="button-text" text="về nhà" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
-      <stylesheets>
-         <URL value="@css/root.css" />
-         <URL value="@css/button.css" />
-      </stylesheets>
    </Button>
 </AnchorPane>

@@ -11,6 +11,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
+      <stylesheets>
+        <URL value="@css/root.css" />
+        <URL value="@css/button.css" />
+        <URL value="@css/menu.css" />
+      </stylesheets>
       <ImageView fitHeight="575.0" fitWidth="800.0" pickOnBounds="true">
         <Image url="@resources/background/background-menu.png" />
       </ImageView>
@@ -31,19 +36,11 @@
       </Text>
       <HBox alignment="CENTER" focusTraversable="true" layoutX="155.0" layoutY="455.0" spacing="50.0">
         <Button styleClass="button-rounded" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#goToRegisterScene" text="lên xe" textAlignment="CENTER" textFill="#753f3f">
-          <stylesheets>
-            <URL value="@css/root.css" />
-            <URL value="@css/button.css" />
-          </stylesheets>
           <cursor>
             <Cursor fx:constant="HAND" />
           </cursor>
         </Button>
         <Button styleClass="button-rounded" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#goToRulesScene" text="luật chơi" textFill="#753f3f">
-          <stylesheets>
-            <URL value="@css/root.css" />
-            <URL value="@css/button.css" />
-          </stylesheets>
           <cursor>
             <Cursor fx:constant="HAND" />
           </cursor>
@@ -52,10 +49,6 @@
           <cursor>
             <Cursor fx:constant="HAND" />
           </cursor>
-          <stylesheets>
-            <URL value="@css/root.css" />
-            <URL value="@css/button.css" />
-          </stylesheets>
         </Button>
       </HBox>
 </AnchorPane>
