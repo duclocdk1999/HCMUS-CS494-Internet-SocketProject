@@ -1,0 +1,13 @@
+.waitroom-player {
+  -fx-font-family: 'iCielBC OldStyle';
+  -fx-font-size: 24;
+}
+
+.waitroom-counter-player {
+  -fx-font-family: 'iCielBC DDCHardwareRough';
+  -fx-font-size: 80;
+}
+
+.waitroom-heading {
+  -fx-font-size: 46;
+}

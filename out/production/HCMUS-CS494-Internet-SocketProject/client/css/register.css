@@ -1,0 +1,23 @@
+.textfield-style {
+  -fx-font-family: "iCielBC OldStyle";
+  -fx-fill: -fx-black;
+  -fx-font-size: 20;
+  -fx-prompt-text-fill: -fx-lightgray;
+
+  -fx-background-color: -fx-beige;
+  -fx-border-radius: 1000;
+  -fx-background-radius: 1000;
+  -fx-pref-width: 265;
+  -fx-max-width: 265;
+
+  -fx-padding: 5 18;
+}
+
+.register-heading {
+  -fx-font-size: 96;
+}
+
+.label-text {
+  -fx-font-family: 'iCielBC OldStyle';
+  -fx-font-size: 30;
+}
