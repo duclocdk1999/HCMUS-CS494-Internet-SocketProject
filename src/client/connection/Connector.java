@@ -39,6 +39,7 @@ public class Connector {
 	public boolean register(String name) {
 		
 		try {
+			System.out.println(name);
 			this.outputStream.writeUTF(name);
 			String info = this.inputStream.readUTF();			// info format:	"successful roomId maxNumPlayers maxNumQuestions" | "failed"
 			String status = info.split(" ")[0];
@@ -55,7 +56,6 @@ public class Connector {
 			return false;
 			
 		} catch (IOException e) {
-
 			e.printStackTrace();
 			return false;
 		}	
