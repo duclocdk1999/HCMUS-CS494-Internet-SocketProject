@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 public class MainClient extends Application {
 
     Scene scene1, scene2, scene3, scene4, scene5, scene6;
+    static Stage stage;
+    public static Race raceScene;
     // The entire window is called stage, content inside the stage is the scene, in scene we will put the GUI => Stage and Scene methodlogy
     // method whenever our app is first launched
     // launch(args): method inside Application class, so whenever we starts our program, we start this method and this method will go into Application and prepare all the things needed
@@ -22,14 +24,16 @@ public class MainClient extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         // primaryStage: main window
+        MainClient.stage = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("menu.fxml"));
         Parent rootRules = FXMLLoader.load(getClass().getResource("rules.fxml"));
         Parent rootRegister = FXMLLoader.load(getClass().getResource("register.fxml"));
         Parent rootWaitroom = FXMLLoader.load(getClass().getResource("waitroom.fxml"));
-        Parent rootRacing = FXMLLoader.load(getClass().getResource("racing.fxml"));
+//        Parent rootRacing = FXMLLoader.load(getClass().getResource("racing.fxml"));
         Parent rootMessage = FXMLLoader.load(getClass().getResource("message-scene.fxml"));
-        primaryStage.setTitle("RACING ARENA - DAU TRUONG XE CO");
-        primaryStage.setResizable(false);
+        raceScene = new Race();
+        stage.setTitle("RACING ARENA - DAU TRUONG XE CO");
+        stage.setResizable(false);
 
         // Layout 1
         root.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
@@ -52,9 +56,11 @@ public class MainClient extends Application {
         scene4 = new Scene(rootWaitroom, 800, 575);
 
         // Layout 5
-        rootRacing.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
-        rootRacing.getStylesheets().add(getClass().getResource("css/racing.css").toExternalForm());
-        scene5 = new Scene(rootRacing, 800, 575);
+
+        raceScene.getScene().getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
+        raceScene.getScene().getStylesheets().add(getClass().getResource("css/waitroom.css").toExternalForm());
+        raceScene.getScene().getStylesheets().add(getClass().getResource("css/racing.css").toExternalForm());
+
 
         // Layout 6
         rootMessage.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
@@ -63,7 +69,7 @@ public class MainClient extends Application {
         // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
         scene6 = new Scene(rootMessage, 800, 575);
 
-        primaryStage.setScene(scene1);
-        primaryStage.show();
+        stage.setScene(scene1);
+        stage.show();
     }
 }
