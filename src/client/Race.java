@@ -26,7 +26,7 @@ public class Race extends AnchorPane implements Initializable {
     public PlayerConnector connector;
 
     @FXML
-    private Text questionResult, scoreResult;
+    private Text questionResult, scoreResult, racingUILength, racingUIRoom;
 
     @FXML
     private TextField inputResult;

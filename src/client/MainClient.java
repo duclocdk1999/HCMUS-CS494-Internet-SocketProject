@@ -61,6 +61,10 @@ public class MainClient extends Application {
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/waitroom.css").toExternalForm());
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/racing.css").toExternalForm());
 
+//        rootRacing.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
+//        rootRacing.getScene().getStylesheets().add(getClass().getResource("css/waitroom.css").toExternalForm());
+//        rootRacing.getStylesheets().add(getClass().getResource("css/racing.css").toExternalForm());
+//        scene5 = new Scene(rootRacing, 800, 575);
 
         // Layout 6
         rootMessage.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());

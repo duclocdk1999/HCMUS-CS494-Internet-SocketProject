@@ -15,6 +15,9 @@
   -fx-darkmustard: #CEA704;
 
   -fx-lightgray: #918D8D;
+  -fx-racingtrack: #2B2828;
+
+  -fx-blendgray: #696661;
 }
 
 @font-face {
@@ -45,4 +48,19 @@
 
 .beige-text {
   -fx-fill: -fx-beige;
+}
+
+.textfield-style {
+  -fx-font-family: "iCielBC OldStyle";
+  -fx-fill: -fx-black;
+  -fx-font-size: 20;
+  -fx-prompt-text-fill: -fx-lightgray;
+
+  -fx-background-color: -fx-beige;
+  -fx-border-radius: 1000;
+  -fx-background-radius: 1000;
+  -fx-pref-width: 265;
+  -fx-max-width: 265;
+
+  -fx-padding: 5 18;
 }

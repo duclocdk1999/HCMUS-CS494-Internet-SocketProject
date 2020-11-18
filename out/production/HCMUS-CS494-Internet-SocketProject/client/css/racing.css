@@ -1,0 +1,110 @@
+.background-racing-arena {
+  -fx-background-color: -fx-racingtrack;
+  -fx-opacity: 0.7;
+}
+
+.racing-light-text {
+  -fx-font-size: 40;
+  -fx-fill: -fx-blendgray;
+}
+
+.racing-line {
+  -fx-stroke: -fx-lightgray;
+}
+
+.racing-dashed-line {
+  -fx-stroke-dash-array: 20 15 3 15;
+  -fx-stroke: -fx-lightgray;
+}
+
+.racing-track-score {
+  -fx-font-family: 'iCielBC OldStyle';
+  -fx-font-size: 18;
+  -fx-fill: -fx-beige;
+}
+
+.racing-countdown {
+  -fx-font-family: 'iCielBC OldStyle';
+  -fx-font-size: 26;
+  -fx-fill: -fx-mustard;
+}
+
+.racing-info-text {
+  -fx-font-size: 18;
+  -fx-fill: -fx-beige;
+}
+
+.racing-countdown-outer {
+  -fx-background: transparent;
+  -fx-stroke: -fx-beige;
+}
+
+.racing-label-text {
+  -fx-font-family: 'iCielBC OldStyle';
+  -fx-font-size: 20;
+  -fx-fill: -fx-beige;
+}
+
+.button-rounded {
+  -fx-pref-width: 60;
+  -fx-font-size: 20;
+  -fx-border-radius: 200;
+  -fx-background-radius: 200;
+}
+
+.textfield-style {
+  -fx-font-size: 16;
+  -fx-pref-width: 160;
+  -fx-max-width: 160;
+
+  -fx-border-radius: 200;
+  -fx-background-radius: 200;
+}
+
+.racing-numbers {
+  -fx-font-size: 28;
+  -fx-fill: -fx-mustard;
+}
+
+.players-grid .img-view {
+  -fx-fit-width: 30;
+}
+
+.racing-grid .img-view {
+  -fx-fit-width: 36;
+}
+
+.player-small-text {
+  -fx-font-size: 16px;
+  -fx-fill: -fx-beige;
+}
+
+.player-scoreboard {
+  -fx-background-color: transparent;
+  -fx-min-height: 75px;
+  -fx-max-height: 75px;
+}
+
+.scroll-pane > .corner {
+  -fx-background-color: red;
+}
+
+
+.player-scoreboard .viewport {
+  -fx-background-color: transparent;
+}
+
+.scroll-pane HBox {
+  -fx-alignment: center;
+  -fx-spacing: 3px;
+}
+
+.noti-text {
+  -fx-font-size: 18px;
+  -fx-fill: -fx-mustard;
+}
+
+.noti-text-username {
+  -fx-font-size: 16px;
+  -fx-fill: -fx-beige;
+}

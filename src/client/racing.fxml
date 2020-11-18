@@ -1,51 +1,295 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
 <?import java.net.URL?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 <?import java.lang.String?>
 
-<?import javafx.geometry.Insets?>
 <fx:root prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" type="AnchorPane">
+   <stylesheets>
+      <URL value="@css/root.css" />
+      <URL value="@css/button.css" />
+      <URL value="@css/racing.css" />
+   </stylesheets>
    <ImageView fitHeight="575.0" fitWidth="800.0" pickOnBounds="true" fx:id="imageRace">
       <Image url="@resources/background/background-waitroom.png" />
    </ImageView>
-   <VBox prefHeight="0.0" prefWidth="0.0" spacing="40.0" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="220.0">
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-         <Text fx:id="scoreResult" strokeType="OUTSIDE" strokeWidth="0.0" text="Phòng thi">
-            <styleClass>
-               <String fx:value="beige-text" />
-               <String fx:value="label-text" />
-            </styleClass>
-         </Text>
-      </HBox>
-      <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
-         <Text fx:id="questionResult" strokeType="OUTSIDE" strokeWidth="0.0">
-            <styleClass>
-               <String fx:value="beige-text" />
-               <String fx:value="label-text" />
-            </styleClass>
-         </Text>
-      </HBox>
-      <TextField fx:id="inputResult" minWidth="-Infinity" promptText="kbietdixe" styleClass="textfield-style">
-         <stylesheets>
-            <URL value="@css/root.css" />
-            <URL value="@css/register.css" />
-         </stylesheets>
-      </TextField>
-      <Button fx:id="submitResult" mnemonicParsing="false" styleClass="button-rounded" text="Send">
-         <stylesheets>
-            <URL value="@css/root.css" />
-            <URL value="@css/button.css" />
-         </stylesheets>
-      </Button>
-   </VBox>
+   <AnchorPane minHeight="-Infinity" prefHeight="150.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+         <Text fx:id="scoreResult" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="10.0" />
+         <Text fx:id="questionResult" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0" />
+         <Text fx:id="racingCounter" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" text="10" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+         <Button mnemonicParsing="false"  styleClass="button-text" text="về nhà" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         </Button>
+         <VBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0" spacing="15.0" AnchorPane.leftAnchor="206.25" AnchorPane.topAnchor="20.0">
+            <children>
+               <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="0.0" prefWidth="500.0" spacing="25.0" VBox.vgrow="ALWAYS">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-numbers" text="-10000  10000  %" />
+                  </children>
+               </HBox>
+               <HBox alignment="CENTER" prefHeight="0.0" prefWidth="800.0" spacing="10.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-label-text" text="Câu trả lời" />
+                     <TextField fx:id="inputResult" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="265.0" promptText="..." styleClass="textfield-style" />
+                     <Button fx:id="submitResult" minWidth="-Infinity" mnemonicParsing="false" styleClass="button-rounded" text="Gửi" />
+                  </children>
+               </HBox>
+            </children>
+         </VBox>
+         <VBox prefHeight="0.0" prefWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="10.0">
+            <children>
+               <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-info-text" text="Phòng thi:" />
+                     <Text fx:id="racingUIRoom" layoutX="61.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-info-text" text="127.0.0.1" />
+                  </children>
+               </HBox>
+               <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-info-text" text="Độ dài đường đua:" />
+                     <Text  layoutX="61.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-info-text" text="5" />
+                  </children>
+               </HBox>
+            </children>
+         </VBox>
+      </children>
+   </AnchorPane>
+   <AnchorPane prefHeight="305.0" prefWidth="800.0" styleClass="background-racing-arena" AnchorPane.topAnchor="155.0">
+      <children>
+         <Line endX="800.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-line" AnchorPane.leftAnchor="0.0" />
+         <Line endX="800.0" layoutX="11.0" layoutY="10.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-line" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="147.0" />
+         <Line endX="800.0" layoutX="11.0" layoutY="314.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-line" AnchorPane.bottomAnchor="147.0" AnchorPane.leftAnchor="0.0" />
+         <Line endX="800.0" layoutX="21.0" layoutY="20.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-line" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
+         <AnchorPane prefHeight="305.0" prefWidth="800.0">
+            <children>
+               <AnchorPane prefHeight="305.0" prefWidth="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <children>
+                     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="55.0" AnchorPane.topAnchor="0.0">
+                        <children>
+                           <Text fill="WHITE" rotate="-90.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-light-text" text="bãi đậu" textAlignment="CENTER" translateX="-45.0" translateY="45.0" wrappingWidth="145.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <font>
+                                 <Font name="iCielBC DDCHardwareRough Compressed" size="40.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </AnchorPane>
+                     <AnchorPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="55.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                        <children>
+                           <Text fill="WHITE" rotate="-90.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-light-text" text="bãi đậu" textAlignment="CENTER" translateX="-45.0" translateY="45.0" wrappingWidth="145.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <font>
+                                 <Font name="iCielBC DDCHardwareRough Compressed" size="40.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </AnchorPane>
+                  </children>
+               </AnchorPane>
+               <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="305.0" prefWidth="55.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <children>
+                     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="55.0" AnchorPane.topAnchor="0.0">
+                        <children>
+                           <Text fill="WHITE" rotate="-90.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-light-text" text="đích" textAlignment="CENTER" translateX="-45.0" translateY="45.0" wrappingWidth="145.0" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="0.0">
+                              <font>
+                                 <Font name="iCielBC DDCHardwareRough Compressed" size="40.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </AnchorPane>
+                     <AnchorPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="55.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                        <children>
+                           <Text fill="WHITE" rotate="-90.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-light-text" text="đích" textAlignment="CENTER" translateX="-45.0" translateY="45.0" wrappingWidth="145.0" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="0.0">
+                              <font>
+                                 <Font name="iCielBC DDCHardwareRough Compressed" size="40.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </AnchorPane>
+                  </children>
+               </AnchorPane>
+               <GridPane minWidth="-Infinity" prefHeight="145.0" prefWidth="690.0" styleClass="racing-grid" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="0.0">
+                  <columnConstraints>
+                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+                     <ColumnConstraints />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints minHeight="10.0" prefHeight="72.5" vgrow="SOMETIMES" />
+                     <RowConstraints minHeight="10.0" prefHeight="72.5" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                  <children>
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="5" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-track-score" text="+1" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                     <Text layoutX="72.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-track-score" text="-3" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  </children>
+               </GridPane>
+               <GridPane alignment="CENTER" layoutX="65.0" layoutY="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="690.0" styleClass="racing-grid" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="55.0">
+                  <columnConstraints>
+                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+                     <ColumnConstraints />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints minHeight="10.0" prefHeight="72.5" vgrow="NEVER" />
+                     <RowConstraints minHeight="10.0" prefHeight="72.5" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                  <children>
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="5" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-track-score" text="-1" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                     <Text layoutX="72.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-track-score" text="+2" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                     <ImageView fitHeight="58.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="player-small-icon" GridPane.columnIndex="2" GridPane.halignment="CENTER">
+                        <image>
+                           <Image url="@resources/player/player-fin.png" />
+                        </image>
+                     </ImageView>
+                  </children>
+               </GridPane>
+            </children>
+         </AnchorPane>
+      </children>
+   </AnchorPane>
+   <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="115.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0">
+      <children>
+         <ImageView fitHeight="90.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+            <image>
+               <Image url="@resources/images/bottom-stamp.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="90.0" fitWidth="119.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <image>
+               <Image url="@resources/images/bottom-stam-right.png" />
+            </image>
+         </ImageView>
+         <HBox alignment="CENTER_RIGHT" prefHeight="115.0" prefWidth="538.0" spacing="70.0" AnchorPane.leftAnchor="135.0">
+            <children>
+               <GridPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                  <columnConstraints>
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                  <children>
+                     <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="92.0" spacing="10.0">
+                        <children>
+                           <ImageView fitHeight="58.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" styleClass="player-small-icon">
+                              <image>
+                                 <Image url="@resources/player/player-banhmi.png" />
+                              </image>
+                           </ImageView>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="player-small-text" text="kbietdixee">
+                           </Text>
+                        </children>
+                     </HBox>
+                     <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1">
+                        <children>
+                           <ImageView fitHeight="58.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" styleClass="player-small-icon">
+                              <image>
+                                 <Image url="@resources/player/player-fin.png" />
+                              </image>
+                           </ImageView>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="player-small-text" text="huhuhu">
+                           </Text>
+                        </children>
+                     </HBox>
+                     <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1">
+                        <children>
+                           <ImageView fitHeight="58.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" styleClass="player-small-icon">
+                              <image>
+                                 <Image url="@resources/player/player-chair.png" />
+                              </image>
+                           </ImageView>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="player-small-text" text="kahoot">
+                           </Text>
+                        </children>
+                     </HBox>
+                     <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <children>
+                           <ImageView fitHeight="58.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" styleClass="player-small-icon">
+                              <image>
+                                 <Image url="@resources/player/player-toong.png" />
+                              </image>
+                           </ImageView>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="player-small-text" text="texeroi">
+                           </Text>
+                        </children>
+                     </HBox>
+                  </children>
+                  <padding>
+                     <Insets bottom="20.0" top="20.0" />
+                  </padding>
+               </GridPane>
+               <ScrollPane hbarPolicy="NEVER" maxWidth="-Infinity" prefHeight="115.0" prefWidth="230.0" styleClass="player-scoreboard" vbarPolicy="ALWAYS" HBox.hgrow="ALWAYS">
+                  <content>
+                     <VBox fx:id="notiBoard" alignment="CENTER" prefHeight="0.0" prefWidth="210.0" spacing="2.0">
+                        <children>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="kbietdixe" />
+                                 <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />
+                              </children>
+                           </HBox>
+                           <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="huhu" />
+                                 <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />
+                              </children>
+                           </HBox>
+                           <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="kbietdixee" />
+                                 <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+1 bước" />
+                              </children>
+                           </HBox>
+                           <HBox layoutX="10.0" layoutY="29.0" prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="texe" />
+                                 <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="-1 bước" />
+                              </children>
+                           </HBox>
+                           <HBox layoutX="10.0" layoutY="48.0" prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="kbietdixe" />
+                                 <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />
+                              </children>
+                           </HBox>
+                        </children>
+                     </VBox>
+                  </content>
+               </ScrollPane>
+            </children>
+         </HBox>
+      </children>
+   </AnchorPane>
 </fx:root>
