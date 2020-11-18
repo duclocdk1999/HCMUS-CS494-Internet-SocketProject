@@ -30,7 +30,6 @@
    <AnchorPane minHeight="-Infinity" prefHeight="150.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
          <Text fx:id="scoreResult" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="10.0" />
-         <Text fx:id="questionResult" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0" />
          <Text fx:id="racingCounter" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" text="10" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
          <Button mnemonicParsing="false"  styleClass="button-text" text="về nhà" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          </Button>
@@ -38,7 +37,7 @@
             <children>
                <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="0.0" prefWidth="500.0" spacing="25.0" VBox.vgrow="ALWAYS">
                   <children>
-                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-numbers" text="-10000  10000  %" />
+                     <Text strokeType="OUTSIDE" fx:id="questionResult" strokeWidth="0.0" styleClass="racing-numbers" />
                   </children>
                </HBox>
                <HBox alignment="CENTER" prefHeight="0.0" prefWidth="800.0" spacing="10.0">
