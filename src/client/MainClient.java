@@ -29,7 +29,7 @@ public class MainClient extends Application {
         Parent rootRules = FXMLLoader.load(getClass().getResource("rules.fxml"));
         Parent rootRegister = FXMLLoader.load(getClass().getResource("register.fxml"));
         Parent rootWaitroom = FXMLLoader.load(getClass().getResource("waitroom.fxml"));
-//        Parent rootRacing = FXMLLoader.load(getClass().getResource("racing.fxml"));
+        Parent rootRacing = FXMLLoader.load(getClass().getResource("racing.fxml"));
         Parent rootMessage = FXMLLoader.load(getClass().getResource("message-scene.fxml"));
         raceScene = new Race();
         stage.setTitle("RACING ARENA - DAU TRUONG XE CO");
@@ -37,25 +37,33 @@ public class MainClient extends Application {
 
         // Layout 1
         root.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
+        root.getStylesheets().add(getClass().getResource("css/button.css").toExternalForm());
         root.getStylesheets().add(getClass().getResource("css/menu.css").toExternalForm());
         scene1 = new Scene(root, 800, 575);
 
         // Layout 2
         rootRules.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
+        rootRules.getStylesheets().add(getClass().getResource("css/button.css").toExternalForm());
         rootRules.getStylesheets().add(getClass().getResource("css/rules.css").toExternalForm());
         scene2 = new Scene(rootRules, 800, 575);
 
         // Layout 3
         rootRegister.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
+        rootRegister.getStylesheets().add(getClass().getResource("css/button.css").toExternalForm());
         rootRegister.getStylesheets().add(getClass().getResource("css/register.css").toExternalForm());
         scene3 = new Scene(rootRegister, 800, 575);
 
         // Layout 4
         rootWaitroom.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
+        rootWaitroom.getStylesheets().add(getClass().getResource("css/button.css").toExternalForm());
         rootWaitroom.getStylesheets().add(getClass().getResource("css/waitroom.css").toExternalForm());
         scene4 = new Scene(rootWaitroom, 800, 575);
 
         // Layout 5
+        rootRacing.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
+        rootRacing.getStylesheets().add(getClass().getResource("css/button.css").toExternalForm());
+        rootRacing.getStylesheets().add(getClass().getResource("css/racing.css").toExternalForm());
+        scene5 = new Scene(rootRacing, 800, 575);
 
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/waitroom.css").toExternalForm());
@@ -64,6 +72,7 @@ public class MainClient extends Application {
 
         // Layout 6
         rootMessage.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
+        rootMessage.getStylesheets().add(getClass().getResource("css/button.css").toExternalForm());
         rootMessage.getStylesheets().add(getClass().getResource("css/message-scene.css").toExternalForm());
         // chúc bạn may mắn lần sau!
         // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!

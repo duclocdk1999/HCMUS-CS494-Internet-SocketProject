@@ -1,0 +1,8 @@
+.message-scene-text {
+  -fx-font-size: 46;
+}
+
+.message-scene-counter {
+  -fx-font-family: 'iCielBC OldStyle';
+  -fx-font-size: 30;
+}

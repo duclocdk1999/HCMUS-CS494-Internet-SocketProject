@@ -1,0 +1,66 @@
+* {
+  -fx-black: #000000;
+  -fx-white: #ffffff;
+
+  -fx-lightwine: #D13232;
+  -fx-beige: #E6E1D0;
+
+  -fx-lightblue: #7C9D9C;
+  -fx-shadowblue: #577A84;
+  -fx-darkwine: #A71A1A;
+  -fx-shadowred: #620A0A;
+
+  -fx-buttontext: #D7E8C0;
+  -fx-mustard: #FFCE00;
+  -fx-darkmustard: #CEA704;
+
+  -fx-lightgray: #918D8D;
+  -fx-racingtrack: #2B2828;
+
+  -fx-blendgray: #696661;
+}
+
+@font-face {
+  src: url('../resources/font/HardwareRough.ttf');
+}
+
+@font-face {
+  src: url('../resources/font/OldStyle.ttf');
+}
+
+.root {
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+  -fx-background-repeat: stretch;
+  -fx-background-size: cover;
+  -fx-background-position: center center;
+  -fx-font-family: 'iCielBC DDCHardwareRough';
+}
+
+.heading-shadow {
+  -fx-fill: -fx-lightwine;
+  -fx-effect: dropshadow(gaussian, -fx-beige, 0.0, 0.0, -4.0, 3.0);
+}
+
+.mustard-text {
+  -fx-fill: -fx-mustard;
+}
+
+.beige-text {
+  -fx-fill: -fx-beige;
+}
+
+.textfield-style {
+  -fx-font-family: "iCielBC OldStyle";
+  -fx-fill: -fx-black;
+  -fx-font-size: 20;
+  -fx-prompt-text-fill: -fx-lightgray;
+
+  -fx-background-color: -fx-beige;
+  -fx-border-radius: 1000;
+  -fx-background-radius: 1000;
+  -fx-pref-width: 265;
+  -fx-max-width: 265;
+
+  -fx-padding: 5 18;
+}
