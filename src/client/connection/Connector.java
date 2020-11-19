@@ -10,8 +10,11 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import shared.Player;
+import shared.WaitTime;
 
 public class Connector {
+	
+	private int limitedAnswerTime = 10;						// limit the time for player to answer, in second
 	
 	private Socket client;									// socket used to communicate with server
 	private DataInputStream inputStream;
@@ -90,6 +93,7 @@ public class Connector {
 		
 		// send result back to the server
 		try {
+			this.outputStream.flush();
 			this.outputStream.writeUTF(answer);
 			return true;
 			
@@ -130,8 +134,15 @@ public class Connector {
 			System.out.println("score: " + connector.getCurrentScore());			
 			System.out.println("question: " + connector.getCurrentQuestion());
 			
-			answer = scanner.nextLine();
-			connector.submitAnswer(answer);
+			long answerTime = new WaitTime().wait(connector.limitedAnswerTime, System.in);
+			if (System.in.available() > 0) {
+				answer = scanner.nextLine();
+			}
+			else {
+				answer = "no answer";
+			}
+			
+			connector.submitAnswer(answer);				
 		}
 		scanner.close();
 	}
