@@ -179,6 +179,9 @@ public class Race extends AnchorPane implements Initializable {
                         questionResult.setText(getCurrentQuestion());
                     });
                 }
+                else {
+                	break;
+                }
             }
         }
     }

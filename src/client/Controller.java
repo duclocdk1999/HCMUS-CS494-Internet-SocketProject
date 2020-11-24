@@ -128,21 +128,8 @@ public class Controller {
 
     @FXML
     private void goToGameScene(ActionEvent event) throws IOException {
-//        event.consume();
-//        goToSceneIndicator(4, event);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-		VBox root = new VBox();
-		Canvas c = new Canvas(100, 100);
-		GraphicsContext gc = c.getGraphicsContext2D();
-		root.getChildren().add(c);
-		
-		gc.setFill(Color.BLACK);
-		gc.fillRect(0, 0, 100, 100);			// (0, 0) is top-left position, 30 is width, 40 is height
-		
-		Scene scene = new Scene(root, 600, 500);
-		currentStage.setScene(scene);
-		currentStage.show();
+        event.consume();
+        goToSceneIndicator(4, event);
     }
 
     @FXML

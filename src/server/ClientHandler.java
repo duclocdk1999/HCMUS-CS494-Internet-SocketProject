@@ -13,11 +13,13 @@ import java.util.Map.Entry;
 
 import shared.Player;
 import shared.Question;
+import shared.WaitTime;
 
 public class ClientHandler extends Thread {
-		
+	
 	private final DataInputStream inputStream;
 	private final DataOutputStream outputStream;
+	private final int limitedAnswerTime = 13;								// seconds
 	private Socket client;
 	private Player player;
 	private int maxNumPlayers;
@@ -105,9 +107,9 @@ public class ClientHandler extends Thread {
 	// -----------------------------------------------------------------------------
 	private boolean test(Question question, String answerString) {
 		
+		Integer expectedAnswer = 0;
 		try {
 			Integer answer = Integer.parseInt(answerString);
-			Integer expectedAnswer = 0;
 			
 			Integer num01 = question.getNumber01();
 			Integer num02 = question.getNumber02();
@@ -131,12 +133,14 @@ public class ClientHandler extends Thread {
 				break;
 			}
 			
-			System.out.println("expected aswer: " + expectedAnswer);
 			return (expectedAnswer.equals(answer));
 		}
 		catch (NumberFormatException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			return false;
+		}
+		finally {
+			System.out.println("expected aswer: " + expectedAnswer);
 		}
 	}
 	// -----------------------------------------------------------------------------
@@ -149,15 +153,29 @@ public class ClientHandler extends Thread {
 	public void run() {
 		
 		try {
+			
+			// User who's late for sending answer, clear these answer first
+			if (this.inputStream.available() > 0) {
+				this.inputStream.readUTF();
+			}
+			
 			// send current score and current question from server to client
 			this.outputStream.writeUTF(ClientHandler.socketPlayerMap.get(roomId).get(this.client).getScore().toString());
 			this.outputStream.writeUTF(questions[roomId].getNumber01() + " " 
 									+ operators.charAt(questions[roomId].getOperatorIndex()) + " " 
 									+ questions[roomId].getNumber02());
 			
-			// get the answer from the client
-			String answer = this.inputStream.readUTF();
-			System.out.println("answer from " + this.player.getName() + ": " + answer);
+			// wait for input from player, in a particular period of time...
+			long answerTime = new WaitTime().wait(limitedAnswerTime, inputStream);
+			
+			String answer = "";
+			if (this.inputStream.available() > 0) {
+				answer = this.inputStream.readUTF();
+				System.out.println("answer from " + this.player.getName() + ": " + answer);				
+			}
+			else {
+				System.out.println("answer from " + this.player.getName() + ": no answer...");								
+			}
 			
 			// check result, modify score
 			if (this.test(questions[roomId], answer)) {
@@ -183,9 +201,4 @@ public class ClientHandler extends Thread {
 		socketPlayerMap.get(roomId).clear();
 	}
 }
-
-
-
-
-
 
