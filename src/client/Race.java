@@ -4,8 +4,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -20,6 +18,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class Race extends AnchorPane implements Initializable {
@@ -65,7 +64,7 @@ public class Race extends AnchorPane implements Initializable {
         });
     }
 
-    public boolean connectToServer() {
+    public HashMap connectToServer() {
         return connector.connectToServer();
     }
 
@@ -79,6 +78,7 @@ public class Race extends AnchorPane implements Initializable {
         Thread thread;
         DataInputStream inputStream;
         DataOutputStream outputStream;
+        HashMap<String, String> connected = new HashMap<String, String>();
 
         String userName;
         String host;
@@ -94,7 +94,7 @@ public class Race extends AnchorPane implements Initializable {
             this.userName = userName;
         }
 
-        public boolean connectToServer() {
+        public HashMap connectToServer() {
             try {
                 System.out.println(userName);
                 socket = new Socket(host, port);
@@ -104,6 +104,7 @@ public class Race extends AnchorPane implements Initializable {
 
                 outputStream.writeUTF(userName);
                 String info = this.inputStream.readUTF();
+                connected.put("info", info);
 
                 thread = new Thread(this);
                 thread.start();
@@ -112,19 +113,23 @@ public class Race extends AnchorPane implements Initializable {
 
                 if (status.equals("successful")) {
                     System.out.println(userName + " logged in successfully");
-                    return true;
+                    connected.put("status", "true");
+                    return connected;
                 }
 
                 System.out.println("Logged in failed");
-                return false;
+                connected.put("status", "false");
+                return connected;
             } catch (UnknownHostException e) {
                 System.out.println("Logged in failed");
                 e.printStackTrace();
-                return false;
+                connected.put("status", "false");
+                return connected;
             } catch (IOException e) {
                 System.out.println("Logged in failed");
                 e.printStackTrace();
-                return false;
+                connected.put("status", "false");
+                return connected;
             }
         }
 

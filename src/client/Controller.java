@@ -1,10 +1,10 @@
 package client;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
 import client.connection.Connector;
-import com.sun.tools.javac.Main;
 import javafx.application.Platform;
 
 import javafx.event.ActionEvent;
@@ -13,17 +13,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-//import javax.swing.text.html.ImageView;
 
 public class Controller {
     @FXML
@@ -33,10 +27,10 @@ public class Controller {
     Button registerButton;
 
     @FXML
-    Text currentPlayers, messageText, messageCounter, waiting;
+    Text messageText, messageCounter, waiting;
 
     @FXML
-    AnchorPane registerScene;
+    AnchorPane registerScene, waitingScene;
     
     String[] sceneNames = {
     	"menu.fxml", "rules.fxml", "register.fxml", "waitroom.fxml", "racing.fxml", "message-scene.fxml"
@@ -44,9 +38,10 @@ public class Controller {
     
     Connector connector = null;
 
-    private boolean connected;
+//    private boolean connected;
     private boolean updateScore;
     private boolean updateQuestion;
+    private HashMap<String, String> connected = new HashMap<String, String>();
 
     // -----------------------------------------------------------------------------------
     private void goToSceneIndicator(int nextScene, ActionEvent event) throws IOException {
@@ -70,14 +65,27 @@ public class Controller {
         CountDownLatch latch = new CountDownLatch(1);
     	String ip = roomTextField.getText();
     	String name = usernameTextField.getText();
-    	connected = false;
 
-        registerScene.setOpacity(0.6);
-        waiting.setVisible(true);
+        connected.put("status", "false");
+
+//        registerScene.setOpacity(0.6);
+        MainClient.waitScene.initWaitingScene();
+        MainClient.stage.setScene(MainClient.waitScene.getScene());
+
+//        nammeee.setVisible(false);
+//        goToSceneIndicator(3, event);
+//        waiting.setVisible(true);
+// làm sao quăng cái connect lên đây ý ông, do t muốn mỗi lần 1 hằng vô là có được cái connected.numPlayers
 
     	new Thread(() -> {
                 MainClient.raceScene.initPlayer(ip, 8080, name);
                 connected = MainClient.raceScene.connectToServer();
+//                cái connect này chỉ xảy ra khi đủ 2 player
+//
+//                String info = connected.keySet().toArray()[0];
+                connected.forEach((key, tab) -> {
+                    System.out.println("key"+key);
+                });
                 latch.countDown();
         }).start();
 
@@ -89,14 +97,18 @@ public class Controller {
             }
 
     	    Platform.runLater(() -> {
-                if (connected) {
-                        registerScene.setOpacity(1);
-                        waiting.setVisible(false);
-                        MainClient.raceScene.initRacingScene();
-                        MainClient.stage.setScene(MainClient.raceScene.getScene());
-                } else {
-                    System.out.println("not connected");
-                }
+                connected.forEach((key, tab) -> {
+                    if (key == "status") {
+                        if (tab == "true") {
+//                        registerScene.setOpacity(1);
+//                        waiting.setVisible(false);
+                            MainClient.raceScene.initRacingScene();
+                            MainClient.stage.setScene(MainClient.raceScene.getScene());
+                        } else {
+                            System.out.println("not connected");
+                        }
+                    }
+                });
             });
         }).start();
     }
