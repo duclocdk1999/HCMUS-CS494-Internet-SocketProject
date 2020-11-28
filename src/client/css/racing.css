@@ -84,6 +84,11 @@
   -fx-fill: -fx-beige;
 }
 
+.player-small-score {
+  -fx-font-size: 16px;
+  -fx-fill: -fx-mustard;
+}
+
 .player-scoreboard {
   -fx-background-color: transparent;
   -fx-min-height: 75px;

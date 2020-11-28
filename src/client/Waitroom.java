@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Waitroom extends AnchorPane implements Initializable {
+public class Waitroom extends AnchorPane {
     Scene scene;
     @FXML
     Text currentWaitPlayers, maxPlayers;
@@ -24,11 +24,8 @@ public class Waitroom extends AnchorPane implements Initializable {
     @FXML
     HBox waitPlayerBox;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-    }
-
     public Waitroom() {
+        /* Initialize Waitroom */
         FXMLLoader loader = new FXMLLoader(getClass().getResource("waitroom.fxml"));
         loader.setRoot(this);
         loader.setController(this);
@@ -43,12 +40,19 @@ public class Waitroom extends AnchorPane implements Initializable {
 
     public void initWaitingScene() {
         int numPlayers = 5, maxNumPlayers = 5, co = -1;
+
+        /*
+        * Set current number of players and the maximum players allowed
+        * Format
+        *   1/4
+        */
         currentWaitPlayers.setText(Integer.toString(numPlayers));
         maxPlayers.setText("/"+maxNumPlayers);
-        String[] imgURLs = {"banhmi", "chair", "fin", "toong", "nonla"};
-//        Text status  = new Text("Loading");
+
+        String[] imgURLs = {"banhmi", "chair", "nonla", "toong", "fin"};
 
         for (int i = 0; i < numPlayers; i++) {
+            /* Create a vertical container - contains username and avatar */
             VBox childNode = new VBox();
             childNode.setId("waitPlayer" + (i+1));
             childNode.setAlignment(Pos.CENTER);

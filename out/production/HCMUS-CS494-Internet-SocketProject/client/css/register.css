@@ -21,3 +21,9 @@
   -fx-font-family: 'iCielBC OldStyle';
   -fx-font-size: 30;
 }
+
+.textfield-noti {
+  -fx-fill: -fx-peachred;
+  -fx-font-size: 15;
+  -fx-font-family: "iCielBC OldStyle";
+}

@@ -18,11 +18,13 @@
 
 .button-rounded:hover {
   -fx-background-color: -fx-darkwine;
+  -fx-cursor: hand;
   -fx-effect: dropshadow(gaussian, -fx-shadowred, 0.0, 0.0, 0.0, 5.0);
 }
 
 .button-rounded:pressed {
   -fx-background-color: #890F0F;
+  -fx-cursor: hand;
   -fx-effect: dropshadow(gaussian, #4E0303, 0.0, 0.0, 0.0, 5.0);
 }
 
@@ -37,10 +39,12 @@
 
 .button-text:hover {
   -fx-text-fill: -fx-mustard;
+  -fx-cursor: hand;
 }
 
 .button-text:pressed {
   -fx-text-fill: -fx-darkmustard;
+  -fx-cursor: hand;
 }
 
 .button-black-disabled {

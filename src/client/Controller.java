@@ -27,7 +27,7 @@ public class Controller {
     Button registerButton;
 
     @FXML
-    Text messageText, messageCounter, roomErrorText, usernameErrorText, waiting;
+    Text roomErrorText, usernameErrorText, waiting;
 
     @FXML
     AnchorPane registerScene, waitingScene;
@@ -59,6 +59,7 @@ public class Controller {
     }
     // -----------------------------------------------------------------------------------
 
+    /* isFieldNotEmpty: Check if input is empty */
     private boolean isFieldNotEmpty(String value, Text errorHolder, String errorMessage) {
         if (value.trim().equals("") || value == null || value.length() == 0) {
             // field is empty, show error
@@ -71,6 +72,7 @@ public class Controller {
         return true;
     }
 
+    /* isRegexValid: Check if input matches the regex pattern */
     private boolean isRegexValid(String value, Text errorHolder, String errorMessage, String regexString) {
         //(?!_)^[A-Za-z0-9_]+
         if (!value.matches(regexString)) {
@@ -83,6 +85,7 @@ public class Controller {
         return true;
     }
 
+    /* isLengthValid: Check if input is in between minLength and maxLength */
     private boolean isLengthValid(String value, Text errorHolder, String errorMessage, int minLength, int maxLength) {
         if (value.length() < minLength || value.length() > maxLength) {
             errorHolder.setVisible(true);
@@ -94,6 +97,9 @@ public class Controller {
         return true;
     }
 
+    /*
+     * Validation for room input and username input
+     */
     private boolean checkInputField(String ip, String name) {
         boolean isValid = true;
         isValid &= isFieldNotEmpty(ip, roomErrorText, "(*) Room IP can not be empty")
@@ -101,7 +107,6 @@ public class Controller {
         isValid &= isFieldNotEmpty(name, usernameErrorText, "(*) Username can not be empty")
                 && isRegexValid(name, usernameErrorText, "(*) Name contains A-Z, a-z, 0-9, and _", "[A-Za-z0-9_]+")
                 && isLengthValid(name, usernameErrorText, "(*) Length must be between 3 and 10", 3, 10);
-
         return isValid;
     }
 
@@ -111,6 +116,7 @@ public class Controller {
     	String name = usernameTextField.getText();
         boolean isValid = checkInputField(ip, name);
 
+        /* if input is valid, start connecting */
     	if (isValid) {
             CountDownLatch latch = new CountDownLatch(1);
             connected.put("status", "false");
@@ -182,10 +188,10 @@ public class Controller {
     }
 
     @FXML
-    private void goToResultScene(ActionEvent event) throws IOException {
+    private void goToResultScene(ActionEvent event, String value) throws IOException {
         event.consume();
+        setTextResult(value);
         goToSceneIndicator(5, event);
-        setTextResult("Chúc bạn may mắn lần sau");
     }
 
     @FXML

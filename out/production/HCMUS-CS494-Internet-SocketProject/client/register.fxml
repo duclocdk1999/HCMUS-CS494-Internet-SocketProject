@@ -27,49 +27,63 @@
          <String fx:value="register-heading" />
       </styleClass>
    </Text>
-   <VBox prefHeight="0.0" prefWidth="0.0" spacing="40.0" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="220.0">
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Phòng thi">
+   <VBox prefHeight="0.0" prefWidth="0.0" spacing="20.0" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="220.0">
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Phòng thi" textOrigin="TOP" HBox.hgrow="SOMETIMES">
             <styleClass>
                <String fx:value="beige-text" />
                <String fx:value="label-text" />
             </styleClass>
-         </Text>
-         <TextField fx:id="roomTextField" minWidth="-Infinity" promptText="127.0.0.1" styleClass="textfield-style">
-            <stylesheets>
-               <URL value="@css/root.css" />
-               <URL value="@css/register.css" />
-            </stylesheets>
             <HBox.margin>
-               <Insets left="20.0" />
+               <Insets bottom="30.0" />
             </HBox.margin>
-         </TextField>
+         </Text>
+         <VBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+            <children>
+               <TextField fx:id="roomTextField" minWidth="-Infinity" promptText="127.0.0.1" styleClass="textfield-style">
+                  <stylesheets>
+                     <URL value="@css/root.css" />
+                     <URL value="@css/register.css" />
+                  </stylesheets>
+               </TextField>
+               <Text fx:id="roomErrorText" styleClass="textfield-noti" visible="false" strokeType="OUTSIDE" strokeWidth="0.0" text="(*) Phòng thi không tồn tại" />
+            </children>
+         </VBox>
       </HBox>
-      <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+      <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Họ và tên">
             <styleClass>
                <String fx:value="beige-text" />
                <String fx:value="label-text" />
             </styleClass>
-         </Text>
-         <TextField fx:id="usernameTextField" minWidth="-Infinity" promptText="kbietdixe" styleClass="textfield-style">
-            <stylesheets>
-               <URL value="@css/root.css" />
-               <URL value="@css/register.css" />
-            </stylesheets>
             <HBox.margin>
-               <Insets left="20.0" />
+               <Insets bottom="30.0" />
             </HBox.margin>
-         </TextField>
+         </Text>
+         <VBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+            <children>
+               <!--(?!_)^[A-Za-z0-9_]{3,10}$-->
+               <TextField fx:id="usernameTextField" minWidth="-Infinity" promptText="kbietdixe" styleClass="textfield-style">
+                  <stylesheets>
+                     <URL value="@css/root.css" />
+                     <URL value="@css/register.css" />
+                  </stylesheets>
+               </TextField>
+               <Text fx:id="usernameErrorText" visible="false" styleClass="textfield-noti" strokeType="OUTSIDE" strokeWidth="0.0" text="(*) Vui lòng nhập tên" />
+            </children>
+         </VBox>
       </HBox>
-      <Button fx:id="registerButton" onAction="#onRegisterBtnClick" mnemonicParsing="false" styleClass="button-rounded" text="đăng kí">
+      <Button fx:id="registerButton" mnemonicParsing="false" onAction="#onRegisterBtnClick" styleClass="button-rounded" text="đăng kí">
          <stylesheets>
             <URL value="@css/root.css" />
             <URL value="@css/button.css" />
          </stylesheets>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
       </Button>
    </VBox>
-   <Button onAction="#goToMenuScene" mnemonicParsing="false" styleClass="button-text" text="về nhà" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
+   <Button mnemonicParsing="false" onAction="#goToMenuScene" styleClass="button-text" text="về nhà" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
       <stylesheets>
          <URL value="@css/root.css" />
          <URL value="@css/button.css" />

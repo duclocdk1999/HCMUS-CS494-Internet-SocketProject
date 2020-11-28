@@ -27,8 +27,8 @@ public class ClientHandler extends Thread {
 	private int roomId;
 	
 	private static List<Map<Socket, Player>> socketPlayerMap;		// client (Socket) --> name (String)
-	private static List<Player> fattestPlayers;						// fattestPlayers.get(roomId)
-	private static List<Integer> losePoints;						// losePoints.get(roomId): wrong answer point will be added to fattest player
+	private static List<Player> fastestPlayers;						// fastestPlayers.get(roomId)
+	private static List<Integer> losePoints;						// losePoints.get(roomId): wrong answer point will be added to fastest player
 	
 	private static Question[] questions;
 	private static String operators;	
@@ -43,14 +43,14 @@ public class ClientHandler extends Thread {
 		this.maxNumPlayers = maxNumPlayers;
 		this.maxNumQuestions = maxNumQuestions;
 		
-		if (socketPlayerMap == null || operators == null || fattestPlayers == null) {
+		if (socketPlayerMap == null || operators == null || fastestPlayers == null) {
 			socketPlayerMap = new ArrayList<>();
-			fattestPlayers = new ArrayList<>();
+			fastestPlayers = new ArrayList<>();
 			losePoints = new ArrayList<>();
 
 			for (int i = 0; i < maxNumRooms; i++) {
 				socketPlayerMap.add(new HashMap<>());
-				fattestPlayers.add(null);
+				fastestPlayers.add(null);
 				losePoints.add(0);
 			}			
 			operators = "+-*/%";
@@ -205,14 +205,14 @@ public class ClientHandler extends Thread {
 		if (this.test(questions[roomId], answer)) {
 
 			this.player.addScore(1);			
-			if (fattestPlayers.get(roomId) == null) {
-				fattestPlayers.set(roomId, this.player);
+			if (fastestPlayers.get(roomId) == null) {
+				fastestPlayers.set(roomId, this.player);
 			}
 		}
 		else {
 			this.player.addScore(-1);
 			
-			// update lost point (bonus for fattest player latter)
+			// update lost point (bonus for fastest player latter)
 			int currentLosePoint = losePoints.get(roomId);
 			losePoints.set(roomId, currentLosePoint + 1);
 		}
@@ -223,15 +223,15 @@ public class ClientHandler extends Thread {
 		return new WaitTime().wait(limitedAnswerTime, inputStream);
 	}
 	// -----------------------------------------------------------------------------
-	private void bonusPointForFattestPlayer() {
+	private void bonusPointForFastestPlayer() {
 		
-		Player fattestPlayer = fattestPlayers.get(roomId);
+		Player fastestPlayer = fastestPlayers.get(roomId);
 		Integer bonus = losePoints.get(roomId);
-		if (fattestPlayer != null) {
+		if (fastestPlayer != null) {
 			
-			if (fattestPlayer.getName().equals(this.player.getName())) {
+			if (fastestPlayer.getName().equals(this.player.getName())) {
 				this.player.addScore(bonus);
-				fattestPlayers.set(roomId, null);
+				fastestPlayers.set(roomId, null);
 				losePoints.set(roomId, 0);
 			}
 		}
@@ -249,7 +249,7 @@ public class ClientHandler extends Thread {
 				this.inputStream.readUTF();
 			}
 			
-			bonusPointForFattestPlayer();
+			bonusPointForFastestPlayer();
 			sendCurrentPlayerScoreAndQuestion();
 			sendOtherPlayerScores();
 			waitForAnswer();
