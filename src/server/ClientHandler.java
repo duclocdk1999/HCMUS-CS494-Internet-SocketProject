@@ -19,18 +19,20 @@ public class ClientHandler extends Thread {
 	
 	private final DataInputStream inputStream;
 	private final DataOutputStream outputStream;
-	private final int limitedAnswerTime = 13;								// seconds
+	private final int limitedAnswerTime = 30;						// seconds
 	private Socket client;
 	private Player player;
 	private int maxNumPlayers;
 	private int maxNumQuestions;
 	private int roomId;
 	
-	private static List<Map<Socket, Player>> socketPlayerMap;			// client (Socket) --> name (String)
+	private static List<Map<Socket, Player>> socketPlayerMap;		// client (Socket) --> name (String)
+	private static List<Player> fastestPlayers;						// fastestPlayers.get(roomId)
+	private static List<Integer> losePoints;						// losePoints.get(roomId): wrong answer point will be added to fastest player
 	
 	private static Question[] questions;
 	private static String operators;	
-	private static Integer numPlayers;							// number of available successful registered players
+	private static Integer numPlayers;								// number of available successful registered players
 	// -----------------------------------------------------------------------------
 	public ClientHandler(Socket client, int roomId, int maxNumPlayers, int maxNumQuestions, int maxNumRooms) throws IOException {
 		
@@ -41,10 +43,16 @@ public class ClientHandler extends Thread {
 		this.maxNumPlayers = maxNumPlayers;
 		this.maxNumQuestions = maxNumQuestions;
 		
-		if (socketPlayerMap == null || operators == null) {
+		if (socketPlayerMap == null || operators == null || fastestPlayers == null) {
 			socketPlayerMap = new ArrayList<>();
-			for (int i = 0; i < maxNumRooms; i++)
+			fastestPlayers = new ArrayList<>();
+			losePoints = new ArrayList<>();
+
+			for (int i = 0; i < maxNumRooms; i++) {
 				socketPlayerMap.add(new HashMap<>());
+				fastestPlayers.add(null);
+				losePoints.add(0);
+			}			
 			operators = "+-*/%";
 		}
 		else {
@@ -149,43 +157,105 @@ public class ClientHandler extends Thread {
 		ClientHandler.questions[roomId].generateRandom();
 	}
 	// -----------------------------------------------------------------------------
+	private void sendCurrentPlayerScoreAndQuestion() throws IOException {
+	
+		/*
+		 * Format: 10 1 + 4
+		 * where: 
+		 * 		10 		=> current score of current player
+		 * 		1 + 4	=> current question 
+		 * */
+		
+		this.outputStream.writeUTF(ClientHandler.socketPlayerMap.get(roomId).get(this.client).getScore().toString());
+		this.outputStream.writeUTF(questions[roomId].getNumber01() + " " 
+								+ operators.charAt(questions[roomId].getOperatorIndex()) + " " 
+								+ questions[roomId].getNumber02());
+	}
+	// -----------------------------------------------------------------------------
+	private void sendOtherPlayerScores() throws IOException {
+		
+		/*
+		 * Format: Loc:1 Nam:2 Chau:3 Minh:4
+		 * 
+		 * */
+		
+		List<Player> players = new ArrayList<>(ClientHandler.socketPlayerMap.get(roomId).values());
+		String records = "";
+		for (Player player: players) {
+			records += player.getName() + ":" + player.getScore() + " ";
+		}
+		this.outputStream.writeUTF(records);
+	}
+	// -----------------------------------------------------------------------------
+	private String getAnswerFromPlayer() throws IOException {
+		
+		String answer = "";
+		if (this.inputStream.available() > 0) {
+			answer = this.inputStream.readUTF();
+			System.out.println("answer from " + this.player.getName() + ": " + answer);		
+		}
+		else {
+			System.out.println("answer from " + this.player.getName() + ": no answer...");								
+		}
+		return answer;
+	}
+	// -----------------------------------------------------------------------------
+	private void checkAnswerAndUpdateScore(String answer) {
+		
+		if (this.test(questions[roomId], answer)) {
+
+			this.player.addScore(1);			
+			if (fastestPlayers.get(roomId) == null) {
+				fastestPlayers.set(roomId, this.player);
+			}
+		}
+		else {
+			this.player.addScore(-1);
+			
+			// update lost point (bonus for fastest player latter)
+			int currentLosePoint = losePoints.get(roomId);
+			losePoints.set(roomId, currentLosePoint + 1);
+		}
+	}
+	// -----------------------------------------------------------------------------
+	private long waitForAnswer() throws IOException {
+		
+		return new WaitTime().wait(limitedAnswerTime, inputStream);
+	}
+	// -----------------------------------------------------------------------------
+	private void bonusPointForFastestPlayer() {
+		
+		Player fastestPlayer = fastestPlayers.get(roomId);
+		Integer bonus = losePoints.get(roomId);
+		if (fastestPlayer != null) {
+			
+			if (fastestPlayer.getName().equals(this.player.getName())) {
+				this.player.addScore(bonus);
+				fastestPlayers.set(roomId, null);
+				losePoints.set(roomId, 0);
+			}
+		}
+		else {
+			losePoints.set(roomId, 0);
+		}
+	}
+	// -----------------------------------------------------------------------------
 	@Override
 	public void run() {
 		
 		try {
-			
 			// User who's late for sending answer, clear these answer first
 			if (this.inputStream.available() > 0) {
 				this.inputStream.readUTF();
 			}
 			
-			// send current score and current question from server to client
-			this.outputStream.writeUTF(ClientHandler.socketPlayerMap.get(roomId).get(this.client).getScore().toString());
-			this.outputStream.writeUTF(questions[roomId].getNumber01() + " " 
-									+ operators.charAt(questions[roomId].getOperatorIndex()) + " " 
-									+ questions[roomId].getNumber02());
+			bonusPointForFastestPlayer();
+			sendCurrentPlayerScoreAndQuestion();
+			sendOtherPlayerScores();
+			waitForAnswer();
 			
-			// wait for input from player, in a particular period of time...
-			long answerTime = new WaitTime().wait(limitedAnswerTime, inputStream);
-			
-			String answer = "";
-			if (this.inputStream.available() > 0) {
-				answer = this.inputStream.readUTF();
-				System.out.println("answer from " + this.player.getName() + ": " + answer);				
-			}
-			else {
-				System.out.println("answer from " + this.player.getName() + ": no answer...");								
-			}
-			
-			// check result, modify score
-			if (this.test(questions[roomId], answer)) {
-				
-				this.player.setScore(this.player.getScore() + 1);
-			}
-			else {
-				
-				this.player.setScore(this.player.getScore() - 1);
-			}
+			String answer = getAnswerFromPlayer();
+			checkAnswerAndUpdateScore(answer);
 			socketPlayerMap.get(roomId).put(this.client, this.player);			
 			
 		} catch (IOException e) {
@@ -197,7 +267,10 @@ public class ClientHandler extends Thread {
 	// -----------------------------------------------------------------------------
 	public static void clearRegisteredNames(int roomId) {
 		
-		// when the game's over, new players participate the room and set nickname without worrying about their previous duplicated name
+		/*
+		 * When the game's over, 
+		 * new players participate the room and set nickname without worrying about their previous duplicated name
+		 */
 		socketPlayerMap.get(roomId).clear();
 	}
 }

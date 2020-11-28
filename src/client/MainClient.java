@@ -13,6 +13,7 @@ public class MainClient extends Application {
     Scene scene1, scene2, scene3, scene4, scene5, scene6;
     static Stage stage;
     public static Race raceScene;
+    public static Waitroom waitScene;
     // The entire window is called stage, content inside the stage is the scene, in scene we will put the GUI => Stage and Scene methodlogy
     // method whenever our app is first launched
     // launch(args): method inside Application class, so whenever we starts our program, we start this method and this method will go into Application and prepare all the things needed
@@ -28,10 +29,12 @@ public class MainClient extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("menu.fxml"));
         Parent rootRules = FXMLLoader.load(getClass().getResource("rules.fxml"));
         Parent rootRegister = FXMLLoader.load(getClass().getResource("register.fxml"));
-        Parent rootWaitroom = FXMLLoader.load(getClass().getResource("waitroom.fxml"));
+//        Parent rootWaitroom = FXMLLoader.load(getClass().getResource("waitroom.fxml"));
 //        Parent rootRacing = FXMLLoader.load(getClass().getResource("racing.fxml"));
         Parent rootMessage = FXMLLoader.load(getClass().getResource("message-scene.fxml"));
+
         raceScene = new Race();
+        waitScene = new Waitroom();
         stage.setTitle("RACING ARENA - DAU TRUONG XE CO");
         stage.setResizable(false);
 
@@ -51,16 +54,15 @@ public class MainClient extends Application {
         scene3 = new Scene(rootRegister, 800, 575);
 
         // Layout 4
-        rootWaitroom.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
-        rootWaitroom.getStylesheets().add(getClass().getResource("css/waitroom.css").toExternalForm());
-        scene4 = new Scene(rootWaitroom, 800, 575);
+        waitScene.getScene().getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
+        waitScene.getScene().getStylesheets().add(getClass().getResource("css/waitroom.css").toExternalForm());
+//        scene4 = new Scene(rootWaitroom, 800, 575);
 
         // Layout 5
 
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/waitroom.css").toExternalForm());
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/racing.css").toExternalForm());
-
 
         // Layout 6
         rootMessage.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
