@@ -149,6 +149,35 @@ public class ClientHandler extends Thread {
 		ClientHandler.questions[roomId].generateRandom();
 	}
 	// -----------------------------------------------------------------------------
+	private void sendCurrentPlayerScoreAndQuestion() throws IOException {
+	
+		/*
+		 * Format: 10 1 + 4 
+		 * 10: current score of current player
+		 * 1 + 4: current question 
+		 * */
+		
+		this.outputStream.writeUTF(ClientHandler.socketPlayerMap.get(roomId).get(this.client).getScore().toString());
+		this.outputStream.writeUTF(questions[roomId].getNumber01() + " " 
+								+ operators.charAt(questions[roomId].getOperatorIndex()) + " " 
+								+ questions[roomId].getNumber02());
+	}
+	// -----------------------------------------------------------------------------
+	private void sendOtherPlayerScores() throws IOException {
+		
+		/*
+		 * Format: Loc:1 Nam:2 Chau:3 Minh:4
+		 * 
+		 * */
+		
+		List<Player> players = new ArrayList<>(ClientHandler.socketPlayerMap.get(roomId).values());
+		String records = "";
+		for (Player player: players) {
+			records += player.getName() + ":" + player.getScore() + " ";
+		}
+		this.outputStream.writeUTF(records);
+	}
+	// -----------------------------------------------------------------------------
 	@Override
 	public void run() {
 		
@@ -159,12 +188,9 @@ public class ClientHandler extends Thread {
 				this.inputStream.readUTF();
 			}
 			
-			// send current score and current question from server to client
-			this.outputStream.writeUTF(ClientHandler.socketPlayerMap.get(roomId).get(this.client).getScore().toString());
-			this.outputStream.writeUTF(questions[roomId].getNumber01() + " " 
-									+ operators.charAt(questions[roomId].getOperatorIndex()) + " " 
-									+ questions[roomId].getNumber02());
-			
+			sendCurrentPlayerScoreAndQuestion();
+			sendOtherPlayerScores();
+						
 			// wait for input from player, in a particular period of time...
 			long answerTime = new WaitTime().wait(limitedAnswerTime, inputStream);
 			

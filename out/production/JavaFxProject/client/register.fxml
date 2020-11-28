@@ -13,6 +13,11 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="registerScene" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
+   <stylesheets>
+      <URL value="@css/root.css" />
+      <URL value="@css/button.css" />
+      <URL value="@css/register.css" />
+   </stylesheets>
    <ImageView fitHeight="575.0" fitWidth="800.0" pickOnBounds="true">
       <Image url="@resources/background/background-register.png" />
    </ImageView>
@@ -39,9 +44,6 @@
                <Insets left="20.0" />
             </HBox.margin>
          </TextField>
-      </HBox>
-      <HBox alignment="CENTER">
-         <Text fx:id="waiting" textAlignment="CENTER" text="Waiting enough players ..." visible="false"></Text>
       </HBox>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Họ và tên">
