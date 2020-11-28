@@ -27,7 +27,7 @@ public class Controller {
     Button registerButton;
 
     @FXML
-    Text messageText, messageCounter, waiting;
+    Text messageText, messageCounter, roomErrorText, usernameErrorText, waiting;
 
     @FXML
     AnchorPane registerScene, waitingScene;
@@ -38,7 +38,6 @@ public class Controller {
     
     Connector connector = null;
 
-//    private boolean connected;
     private boolean updateScore;
     private boolean updateQuestion;
     private HashMap<String, String> connected = new HashMap<String, String>();
@@ -59,58 +58,96 @@ public class Controller {
         System.out.println(text);
     }
     // -----------------------------------------------------------------------------------
+
+    private boolean isFieldNotEmpty(String value, Text errorHolder, String errorMessage) {
+        if (value.trim().equals("") || value == null || value.length() == 0) {
+            // field is empty, show error
+            errorHolder.setVisible(true);
+            errorHolder.setText(errorMessage);
+            return false;
+        }
+        errorHolder.setVisible(false);
+        errorHolder.setText("");
+        return true;
+    }
+
+    private boolean isRegexValid(String value, Text errorHolder, String errorMessage, String regexString) {
+        //(?!_)^[A-Za-z0-9_]+
+        if (!value.matches(regexString)) {
+            errorHolder.setVisible(true);
+            errorHolder.setText(errorMessage);
+            return false;
+        }
+        errorHolder.setVisible(false);
+        errorHolder.setText("");
+        return true;
+    }
+
+    private boolean isLengthValid(String value, Text errorHolder, String errorMessage, int minLength, int maxLength) {
+        if (value.length() < minLength || value.length() > maxLength) {
+            errorHolder.setVisible(true);
+            errorHolder.setText(errorMessage);
+            return false;
+        }
+        errorHolder.setVisible(false);
+        errorHolder.setText("");
+        return true;
+    }
+
+    private boolean checkInputField(String ip, String name) {
+        boolean isValid = true;
+        isValid &= isFieldNotEmpty(ip, roomErrorText, "(*) Room IP can not be empty")
+                && isRegexValid(ip, roomErrorText, "(*) Room IP not available", "localhost");
+        isValid &= isFieldNotEmpty(name, usernameErrorText, "(*) Username can not be empty")
+                && isRegexValid(name, usernameErrorText, "(*) Name contains A-Z, a-z, 0-9, and _", "[A-Za-z0-9_]+")
+                && isLengthValid(name, usernameErrorText, "(*) Length must be between 3 and 10", 3, 10);
+
+        return isValid;
+    }
+
     @FXML
     private void onRegisterBtnClick(ActionEvent event) throws IOException, InterruptedException {
-
-        CountDownLatch latch = new CountDownLatch(1);
-    	String ip = roomTextField.getText();
+        String ip = roomTextField.getText();
     	String name = usernameTextField.getText();
+        boolean isValid = checkInputField(ip, name);
 
-        connected.put("status", "false");
+    	if (isValid) {
+            CountDownLatch latch = new CountDownLatch(1);
+            connected.put("status", "false");
 
-//        registerScene.setOpacity(0.6);
-        MainClient.waitScene.initWaitingScene();
-        MainClient.stage.setScene(MainClient.waitScene.getScene());
+            MainClient.waitScene.initWaitingScene();
+            MainClient.stage.setScene(MainClient.waitScene.getScene());
 
-//        nammeee.setVisible(false);
-//        goToSceneIndicator(3, event);
-//        waiting.setVisible(true);
-// làm sao quăng cái connect lên đây ý ông, do t muốn mỗi lần 1 hằng vô là có được cái connected.numPlayers
-
-    	new Thread(() -> {
+            new Thread(() -> {
                 MainClient.raceScene.initPlayer(ip, 8080, name);
                 connected = MainClient.raceScene.connectToServer();
-//                cái connect này chỉ xảy ra khi đủ 2 player
-//
-//                String info = connected.keySet().toArray()[0];
                 connected.forEach((key, tab) -> {
                     System.out.println("key"+key);
                 });
                 latch.countDown();
-        }).start();
+            }).start();
 
-    	new Thread(() -> {
-    	    try {
-    	        latch.await();
-            } catch(InterruptedException e) {
-    	        e.printStackTrace();
-            }
+            new Thread(() -> {
+                try {
+                    latch.await();
+                } catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-    	    Platform.runLater(() -> {
-                connected.forEach((key, tab) -> {
-                    if (key == "status") {
-                        if (tab == "true") {
-//                        registerScene.setOpacity(1);
-//                        waiting.setVisible(false);
-                            MainClient.raceScene.initRacingScene();
-                            MainClient.stage.setScene(MainClient.raceScene.getScene());
-                        } else {
-                            System.out.println("not connected");
+                Platform.runLater(() -> {
+                    connected.forEach((key, tab) -> {
+                        if (key == "status") {
+                            if (tab == "true") {
+                                MainClient.raceScene.initRacingScene();
+                                MainClient.stage.setScene(MainClient.raceScene.getScene());
+                            } else {
+                                System.out.println("not connected");
+                            }
                         }
-                    }
+                    });
                 });
-            });
-        }).start();
+            }).start();
+        }
     }
 
     // -----------------------------------------------------------------------------------
