@@ -27,7 +27,7 @@
       <Image url="@resources/background/background-waitroom.png" />
    </ImageView>
    <AnchorPane minHeight="-Infinity" prefHeight="150.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <Text fx:id="scoreResult" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="10.0" />
+      <Text fx:id="scoreResult" text="0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="10.0" />
       <Text fx:id="racingCounter" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" text="10" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <Button mnemonicParsing="false"  styleClass="button-text" text="về nhà" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
       </Button>
@@ -190,24 +190,12 @@
          </GridPane>
          <ScrollPane hbarPolicy="NEVER" maxWidth="-Infinity" prefHeight="115.0" prefWidth="230.0" styleClass="player-scoreboard" vbarPolicy="ALWAYS" HBox.hgrow="ALWAYS">
             <VBox fx:id="notiBoard" alignment="CENTER" prefHeight="0.0" prefWidth="210.0" spacing="2.0">
-               <HBox prefHeight="100.0" prefWidth="200.0">
+               <HBox styleClass="noti-message">
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="kbietdixe" />
                   <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />
                </HBox>
                <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="huhu" />
-                  <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />
-               </HBox>
-               <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="kbietdixee" />
-                  <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+1 bước" />
-               </HBox>
-               <HBox layoutX="10.0" layoutY="29.0" prefHeight="100.0" prefWidth="200.0">
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="texe" />
-                  <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="-1 bước" />
-               </HBox>
-               <HBox layoutX="10.0" layoutY="48.0" prefHeight="100.0" prefWidth="200.0">
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="kbietdixe" />
                   <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />
                </HBox>
             </VBox>

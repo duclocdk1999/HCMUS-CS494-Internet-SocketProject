@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -36,7 +37,7 @@ public class Race extends AnchorPane implements Initializable {
     @FXML
     private ImageView imageRace;
 
-
+    int count = 0;
 
     Scene scene;
 
@@ -80,6 +81,7 @@ public class Race extends AnchorPane implements Initializable {
         DataOutputStream outputStream;
         HashMap<String, String> connected = new HashMap<String, String>();
 
+        ArrayList<String> updatedScoreList = new ArrayList<String>();
         String userName;
         String host;
         int port;
@@ -96,7 +98,7 @@ public class Race extends AnchorPane implements Initializable {
 
         public HashMap connectToServer() {
             try {
-                System.out.println(userName);
+                System.out.println("userName:"+userName);
                 socket = new Socket(host, port);
                 System.out.println("client is connected to " + host + " port " + port + "...");
                 inputStream = new DataInputStream(socket.getInputStream());
@@ -105,6 +107,7 @@ public class Race extends AnchorPane implements Initializable {
                 outputStream.writeUTF(userName);
                 String info = this.inputStream.readUTF();
                 connected.put("info", info);
+                System.out.println("current: "+Integer.valueOf(info.split(" ")[4]));
 
                 thread = new Thread(this);
                 thread.start();
@@ -114,6 +117,8 @@ public class Race extends AnchorPane implements Initializable {
                 if (status.equals("successful")) {
                     System.out.println(userName + " logged in successfully");
                     connected.put("status", "true");
+                    ++count;
+                    System.out.print("count: "+count);
                     return connected;
                 }
 
@@ -180,6 +185,25 @@ public class Race extends AnchorPane implements Initializable {
                     Platform.runLater(() -> {
                         imageRace.setOpacity(1);
                         inputResult.clear();
+
+//                        <HBox styleClass="noti-message">
+//                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="kbietdixe" />
+//                  <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />
+//               </HBox>
+                        int prevScore = Integer.parseInt(scoreResult.getText());
+                        int nextScore = Integer.parseInt(getCurrentScore());
+                        String updatedScore = Integer.toString(nextScore-prevScore);
+                        if (Integer.parseInt(updatedScore) > 0) {
+                            updatedScore = "+" + updatedScore;
+                        }
+                        if (updatedScore != "0") {
+                            updatedScoreList.add(updatedScore);
+                        }
+
+                        System.out.println(updatedScoreList.toString());
+
+
+
                         scoreResult.setText(getCurrentScore());
                         questionResult.setText(getCurrentQuestion());
                     });

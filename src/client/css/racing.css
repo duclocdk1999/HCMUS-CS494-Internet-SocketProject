@@ -89,9 +89,13 @@
   -fx-background-color: red;
 }
 
-
 .player-scoreboard .viewport {
   -fx-background-color: transparent;
+}
+
+.noti-message {
+  -fx-pref-width: 200px;
+  -fx-pref-height: 100px;
 }
 
 .scroll-pane HBox {
