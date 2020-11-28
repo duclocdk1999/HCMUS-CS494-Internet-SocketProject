@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 
@@ -27,6 +29,9 @@ public class Race extends AnchorPane implements Initializable {
 
     @FXML
     private Text questionResult, scoreResult, racingUILength, racingUIRoom;
+
+    @FXML
+    VBox notiBoard;
 
     @FXML
     private TextField inputResult;
@@ -170,7 +175,14 @@ public class Race extends AnchorPane implements Initializable {
 
         public void submitAnswer(String answer) {
             try {
-                imageRace.setOpacity(0.5);
+                submitResult.setDisable(true);
+
+                submitResult.getStyleClass().add("button-black-disabled");
+
+                questionResult.getStyleClass().clear();
+                questionResult.getStyleClass().add("racing-numbers");
+                questionResult.getStyleClass().add("disabled-text");
+
                 this.outputStream.writeUTF(answer);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -183,27 +195,36 @@ public class Race extends AnchorPane implements Initializable {
                 System.out.println("Run...");
                 if (updateScore() && updateQuestion()) {
                     Platform.runLater(() -> {
-                        imageRace.setOpacity(1);
+                        submitResult.setDisable(false);
+
+                        submitResult.getStyleClass().clear();
+                        submitResult.getStyleClass().add("button-rounded");
+
+                        questionResult.getStyleClass().clear();
+                        questionResult.getStyleClass().add("racing-numbers");
+
                         inputResult.clear();
 
-//                        <HBox styleClass="noti-message">
-//                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="kbietdixe" />
-//                  <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />
-//               </HBox>
                         int prevScore = Integer.parseInt(scoreResult.getText());
                         int nextScore = Integer.parseInt(getCurrentScore());
                         String updatedScore = Integer.toString(nextScore-prevScore);
+                        System.out.println("Curent:" + updatedScore);
                         if (Integer.parseInt(updatedScore) > 0) {
                             updatedScore = "+" + updatedScore;
                         }
-                        if (updatedScore != "0") {
+                        if (!updatedScore.equals("0")) {
+                            updatedScore += " bước";
                             updatedScoreList.add(updatedScore);
+
+                            HBox notiMessage = new HBox();
+                            Text textUsername = new Text("TUI");
+                            Text textScore = new Text(updatedScore);
+                            textUsername.getStyleClass().add("noti-text-username");
+                            textScore.getStyleClass().add("noti-text");
+
+                            notiMessage.getChildren().addAll(textUsername, textScore);
+                            notiBoard.getChildren().add(notiMessage);
                         }
-
-                        System.out.println(updatedScoreList.toString());
-
-
-
                         scoreResult.setText(getCurrentScore());
                         questionResult.setText(getCurrentQuestion());
                     });

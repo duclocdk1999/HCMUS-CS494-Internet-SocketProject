@@ -13,6 +13,7 @@
   -fx-border-radius: 1000;
   -fx-text-fill: -fx-beige;
   -fx-background-radius: 1000;
+  -fx-alignment: CENTER;
 }
 
 .button-rounded:hover {
@@ -40,4 +41,9 @@
 
 .button-text:pressed {
   -fx-text-fill: -fx-darkmustard;
+}
+
+.button-black-disabled {
+  -fx-background-color: #6b6a66;
+  -fx-effect: dropshadow(gaussian, -fx-roadgray, 0.0, 0.0, 0.0, 5.0);
 }

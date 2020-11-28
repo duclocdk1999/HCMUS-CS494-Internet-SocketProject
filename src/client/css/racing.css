@@ -66,6 +66,11 @@
   -fx-fill: -fx-mustard;
 }
 
+.disabled-text {
+  -fx-font-size: 28;
+  -fx-fill: #BEBEBE;
+}
+
 .players-grid .img-view {
   -fx-fit-width: 30;
 }

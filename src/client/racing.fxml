@@ -190,14 +190,14 @@
          </GridPane>
          <ScrollPane hbarPolicy="NEVER" maxWidth="-Infinity" prefHeight="115.0" prefWidth="230.0" styleClass="player-scoreboard" vbarPolicy="ALWAYS" HBox.hgrow="ALWAYS">
             <VBox fx:id="notiBoard" alignment="CENTER" prefHeight="0.0" prefWidth="210.0" spacing="2.0">
-               <HBox styleClass="noti-message">
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="kbietdixe" />
-                  <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />
-               </HBox>
-               <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="huhu" />
-                  <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />
-               </HBox>
+<!--               <HBox styleClass="noti-message">-->
+<!--                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="kbietdixe" />-->
+<!--                  <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />-->
+<!--               </HBox>-->
+<!--               <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">-->
+<!--                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text-username" text="huhu" />-->
+<!--                  <Text layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="noti-text" text="+5 bước" />-->
+<!--               </HBox>-->
             </VBox>
          </ScrollPane>
       </HBox>
