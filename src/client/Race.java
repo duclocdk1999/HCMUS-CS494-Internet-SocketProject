@@ -93,6 +93,7 @@ public class Race extends AnchorPane implements Initializable {
 
         String score;
         String question;
+        String otherScores;
 
 
         public PlayerConnector(String host, int port, String userName) {
@@ -164,7 +165,24 @@ public class Race extends AnchorPane implements Initializable {
                 return false;
             }
         }
-
+        // ---------------------------------------------------------------------------------
+        public boolean updateOtherScores() {
+        	/*
+        	 * written by: Loc
+        	 * contact me through this profile: www.facebook.com/duclockd1999
+        	 * */
+        	
+        	try {
+        		otherScores = this.inputStream.readUTF();
+        		System.out.println(otherScores);
+        		return true;
+        	}
+        	catch (IOException e) {
+        		e.printStackTrace();
+        		return false;
+        	}
+        }
+        // ---------------------------------------------------------------------------------
         public String getCurrentScore() {
             return score;
         }
@@ -193,7 +211,7 @@ public class Race extends AnchorPane implements Initializable {
         public void run() {
             while (thread != null) {
                 System.out.println("Run...");
-                if (updateScore() && updateQuestion()) {
+                if (updateScore() && updateQuestion() && updateOtherScores()) {
                     Platform.runLater(() -> {
                         submitResult.setDisable(false);
 

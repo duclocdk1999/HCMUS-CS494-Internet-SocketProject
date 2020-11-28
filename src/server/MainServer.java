@@ -8,7 +8,7 @@ import java.net.Socket;
 public class MainServer extends Thread {
 	
 	private static final int port = 8080;
-	private static final int maxNumQuestions = 3;				// maximum number of questions
+	private static final int maxNumQuestions = 10;				// maximum number of questions
 	private static final int maxNumPlayers = 2;					// maximum number of players per room
 	private static final int maxNumRooms = 3;					// maximum number of room concurrently
 	private static ServerSocket listener;

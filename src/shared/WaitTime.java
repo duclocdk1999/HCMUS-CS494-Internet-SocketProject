@@ -11,7 +11,7 @@ public class WaitTime {
 		
 		long startTime = System.currentTimeMillis();
 		while ((System.currentTimeMillis() - startTime) < time * 1000 && !(inputStream.available() > 0)) {
-			// wait
+			// wait...
 		}
 		return System.currentTimeMillis() - startTime;
 	}
@@ -20,7 +20,7 @@ public class WaitTime {
 		
 		long startTime = System.currentTimeMillis();
 		while ((System.currentTimeMillis() - startTime) < time * 1000 && !(scanner.hasNextLine())) {
-			// wait
+			// wait...
 		}
 		return System.currentTimeMillis() - startTime;		
 	}

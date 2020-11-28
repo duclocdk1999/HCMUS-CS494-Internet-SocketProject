@@ -22,6 +22,7 @@ public class Connector {
 	
 	private Player player;									
 	private String question;
+	private String otherScores;
 	
 	private Integer maxNumPlayers;							// maximum number of players
 	private Integer maxNumQuestions;						// maximum number of questions
@@ -89,6 +90,17 @@ public class Connector {
 		}
 	}
 	// ------------------------------------------------------------------------------
+	public boolean updateOtherScores() {
+		
+		try {
+			this.otherScores = this.inputStream.readUTF();
+			return true;
+		}
+		catch (IOException e) {
+			return false;
+		}
+	}
+	// ------------------------------------------------------------------------------
 	public boolean submitAnswer(String answer) {
 		
 		// send result back to the server
@@ -114,6 +126,11 @@ public class Connector {
 		return this.player.getScore();
 	}
 	// ------------------------------------------------------------------------------
+	public String getOtherScores() {
+		
+		return this.otherScores;
+	}
+	// ------------------------------------------------------------------------------
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		
 		Connector connector = new Connector("localhost", 8080);
@@ -128,11 +145,12 @@ public class Connector {
 
 		// playing game
 		String answer;
-		while (connector.updateScore() && connector.updateQuestion()) {
+		while (connector.updateScore() && connector.updateQuestion() && connector.updateOtherScores()) {
 			// unable to updateScore means server disconnected
 			
 			System.out.println("score: " + connector.getCurrentScore());			
 			System.out.println("question: " + connector.getCurrentQuestion());
+			System.out.println("other player score: " + connector.getOtherScores());
 			
 			long answerTime = new WaitTime().wait(connector.limitedAnswerTime, System.in);
 			if (System.in.available() > 0) {

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="575.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
+<fx:root prefHeight="575.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" type="AnchorPane">
    <stylesheets>
       <URL value="@css/root.css" />
       <URL value="@css/button.css" />
@@ -20,7 +20,7 @@
       <Image url="@resources/background/background-waitroom.png" />
    </ImageView>
    <VBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <Text fx:id="name" strokeType="OUTSIDE" strokeWidth="0.0" text="chờ vài giây&#13;để server tìm&#13;bạn đua chung nhé!" textAlignment="CENTER" wrappingWidth="800.0">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="chờ vài giây&#13;để server tìm&#13;bạn đua chung nhé!" textAlignment="CENTER" wrappingWidth="800.0">
          <styleClass>
             <String fx:value="heading-shadow" />
             <String fx:value="waitroom-heading" />
@@ -30,13 +30,13 @@
          </VBox.margin>
       </Text>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-         <Text fx:id="currentPlayers" strokeType="OUTSIDE" strokeWidth="0.0" text="1" textAlignment="CENTER">
+         <Text fx:id="currentWaitPlayers" strokeType="OUTSIDE" strokeWidth="0.0" text="1" textAlignment="CENTER">
             <styleClass>
                <String fx:value="beige-text" />
                <String fx:value="waitroom-counter-player" />
             </styleClass>
          </Text>
-         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="/4" textAlignment="CENTER">
+         <Text fx:id="maxPlayers" strokeType="OUTSIDE" strokeWidth="0.0" text="/4" textAlignment="CENTER">
             <styleClass>
                <String fx:value="beige-text" />
                <String fx:value="waitroom-counter-player" />
@@ -46,51 +46,7 @@
             <Insets top="20.0" />
          </VBox.margin>
       </HBox>
-      <HBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0" spacing="45.0">
-         <VBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="kbietdixee">
-               <styleClass>
-                  <String fx:value="waitroom-player" />
-                  <String fx:value="beige-text" />
-               </styleClass>
-            </Text>
-            <ImageView fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-               <Image url="@resources/player/player-banhmi.png" />
-            </ImageView>
-         </VBox>
-         <VBox alignment="CENTER" layoutX="563.0" layoutY="10.0" prefHeight="0.0" prefWidth="0.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="huhuhu">
-               <styleClass>
-                  <String fx:value="waitroom-player" />
-                  <String fx:value="beige-text" />
-               </styleClass>
-            </Text>
-            <ImageView fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@resources/player/player-chair.png" />
-            </ImageView>
-         </VBox>
-         <VBox alignment="CENTER" layoutX="497.0" layoutY="10.0" prefHeight="0.0" prefWidth="0.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="kahoot">
-               <styleClass>
-                  <String fx:value="waitroom-player" />
-                  <String fx:value="beige-text" />
-               </styleClass>
-            </Text>
-            <ImageView fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-               <Image url="@resources/player/player-fin.png" />
-            </ImageView>
-         </VBox>
-         <VBox alignment="CENTER" layoutX="430.0" layoutY="10.0" prefHeight="0.0" prefWidth="0.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="texeroi">
-               <styleClass>
-                  <String fx:value="waitroom-player" />
-                  <String fx:value="beige-text" />
-               </styleClass>
-            </Text>
-            <ImageView fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-               <Image url="@resources/player/player-toong.png" />
-            </ImageView>
-         </VBox>
+      <HBox fx:id="waitPlayerBox" alignment="CENTER" prefHeight="0.0" prefWidth="0.0" spacing="45.0">
       </HBox>
    </VBox>
-</AnchorPane>
+</fx:root>
