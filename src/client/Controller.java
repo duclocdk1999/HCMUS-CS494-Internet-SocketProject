@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
-import client.connection.Connector;
 import javafx.application.Platform;
 
 import javafx.event.ActionEvent;
@@ -21,26 +20,22 @@ import javafx.stage.Stage;
 
 public class Controller {
     @FXML
-    TextField roomTextField, usernameTextField, inputResult, questionResult, scoreResult;
+    TextField roomTextField, usernameTextField;
 
     @FXML
     Button registerButton;
 
     @FXML
-    Text roomErrorText, usernameErrorText, waiting;
+    Text roomErrorText, usernameErrorText;
 
     @FXML
-    AnchorPane registerScene, waitingScene;
+    AnchorPane registerScene;
     
     String[] sceneNames = {
     	"menu.fxml", "rules.fxml", "register.fxml", "waitroom.fxml", "racing.fxml", "message-scene.fxml"
     };
-    
-    Connector connector = null;
 
-    private boolean updateScore;
-    private boolean updateQuestion;
-    private HashMap<String, String> connected = new HashMap<String, String>();
+    private HashMap<String, String> connected = new HashMap<>();
 
     // -----------------------------------------------------------------------------------
     private void goToSceneIndicator(int nextScene, ActionEvent event) throws IOException {
@@ -61,7 +56,7 @@ public class Controller {
 
     /* isFieldNotEmpty: Check if input is empty */
     private boolean isFieldNotEmpty(String value, Text errorHolder, String errorMessage) {
-        if (value.trim().equals("") || value == null || value.length() == 0) {
+        if (value.trim().equals("") || value.length() == 0) {
             // field is empty, show error
             errorHolder.setVisible(true);
             errorHolder.setText(errorMessage);
@@ -127,9 +122,7 @@ public class Controller {
             new Thread(() -> {
                 MainClient.raceScene.initPlayer(ip, 8080, name);
                 connected = MainClient.raceScene.connectToServer();
-                connected.forEach((key, tab) -> {
-                    System.out.println("key"+key);
-                });
+                connected.forEach((key, tab) -> System.out.println("key"+key));
                 latch.countDown();
             }).start();
 
@@ -140,18 +133,16 @@ public class Controller {
                     e.printStackTrace();
                 }
 
-                Platform.runLater(() -> {
-                    connected.forEach((key, tab) -> {
-                        if (key == "status") {
-                            if (tab == "true") {
-                                MainClient.raceScene.initRacingScene();
-                                MainClient.stage.setScene(MainClient.raceScene.getScene());
-                            } else {
-                                System.out.println("not connected");
-                            }
+                Platform.runLater(() -> connected.forEach((key, tab) -> {
+                    if (key.equals("status")) {
+                        if (tab.equals("true")) {
+                            MainClient.raceScene.initRacingScene();
+                            MainClient.stage.setScene(MainClient.raceScene.getScene());
+                        } else {
+                            System.out.println("not connected");
                         }
-                    });
-                });
+                    }
+                }));
             }).start();
         }
     }
