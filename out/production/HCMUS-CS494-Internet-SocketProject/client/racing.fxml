@@ -38,7 +38,7 @@
          <HBox alignment="CENTER" prefHeight="0.0" prefWidth="800.0" spacing="10.0">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-label-text" text="Câu trả lời" />
             <TextField fx:id="inputResult" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="265.0" promptText="..." styleClass="textfield-style" />
-            <Button fx:id="submitResult" minWidth="-Infinity" mnemonicParsing="false" styleClass="button-rounded" text="Gửi" />
+            <Button defaultButton="true" fx:id="submitResult" minWidth="-Infinity" mnemonicParsing="false" styleClass="button-rounded" text="Gửi" />
          </HBox>
       </VBox>
       <VBox prefHeight="0.0" prefWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="10.0">

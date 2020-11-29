@@ -1,16 +1,11 @@
 package client;
 
-import com.sun.tools.javac.Main;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -21,8 +16,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -38,111 +31,29 @@ public class Race extends AnchorPane implements Initializable {
     public PlayerConnector connector;
 
     @FXML
-    private Text messageText, messageCounter, questionResult, scoreResult, racingUILength, racingUIRoom;
-
-    @FXML
-    private Text playerSmallText1, playerSmallText2, playerSmallText3, playerSmallText4,
-            playerSmallScore1, playerSmallScore2, playerSmallScore3, playerSmallScore4;
+    Text questionResult, scoreResult, racingUILength, racingUIRoom;
 
     @FXML
     AnchorPane anchorPaneContainer;
 
     @FXML
-    private GridPane gridPaneSmallScore, gridPaneTop, gridPaneBottom;
+    GridPane gridPaneSmallScore;
 
     @FXML
-    private VBox notiBoard;
+    VBox notiBoard;
 
     @FXML
-    private ScrollPane scrollPane;
+    ScrollPane scrollPane;
 
     @FXML
-    private TextField inputResult;
+    TextField inputResult;
 
     @FXML
-    private Button submitResult;
-
-    @FXML
-    private ImageView imageRace;
+    Button submitResult;
 
     int questionCounter = 0;
 
     Scene scene;
-
-    // -----------------------------------------------------------------------------------
-    String[] sceneNames = {
-            "menu.fxml", "rules.fxml", "register.fxml", "waitroom.fxml", "racing.fxml", "message-scene.fxml"
-    };
-
-    // -----------------------------------------------------------------------------------
-    private ImageView createImageViewNode(String urlPath, int sizeValue) {
-        URL fxmlURL = getClass().getResource(urlPath);
-        Image img = new Image(fxmlURL.toExternalForm(), sizeValue, sizeValue, true, true);
-        ImageView imageViewNode = new ImageView();
-        imageViewNode.setImage(img);
-        return imageViewNode;
-    }
-
-    private GridPane initializeGridPane(double anchorLeft, double anchorTop) {
-        GridPane gridPane = new GridPane();
-        gridPane.getStyleClass().add("racing-grid");
-        gridPane.setPrefHeight(145.0);
-        gridPane.setAlignment(Pos.CENTER);
-        gridPane.setPrefWidth(690.0);
-        AnchorPane.setLeftAnchor(gridPane, anchorLeft);
-        AnchorPane.setTopAnchor(gridPane, anchorTop);
-        return gridPane;
-    }
-
-    private void setRoadLength(String maxLength) {
-        System.out.println("debugger02");
-//        <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line"
-//        GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
-//        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
-
-//         fx:id="gridPaneTop" minWidth="-Infinity" prefHeight="145.0" prefWidth="690.0"
-//         styleClass="racing-grid" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="0.0"
-
-//        fx:id="gridPaneBottom" alignment="CENTER" layoutX="65.0" layoutY="10.0"
-//        maxWidth="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="690.0"
-//        styleClass="racing-grid" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="55.0"
-
-        GridPane gridTop = initializeGridPane(55.0, 0.0);
-        GridPane gridBottom = initializeGridPane(55.0, 0.0);
-
-        for (int i = 0; i < Integer.parseInt(maxLength); i++) {
-            System.out.println("debugger03");
-            ColumnConstraints column = new ColumnConstraints();
-            column.setHgrow(Priority.NEVER);
-            column.setPrefWidth((double)690.0/Double.parseDouble(maxLength));
-            gridTop.getColumnConstraints().add(column);
-            gridBottom.getColumnConstraints().add(column);
-        }
-
-        for (int j = 0; j < 2; j++) {
-            RowConstraints row = new RowConstraints();
-            row.setVgrow(Priority.NEVER);
-            row.setPrefHeight(73.5);;
-            gridTop.getRowConstraints().add(row);
-            gridBottom.getRowConstraints().add(row);
-        }
-
-        for (int y = 0; y < Integer.parseInt(maxLength); y++) {
-            Line divider = new Line();
-            divider.getStyleClass().add("racing-dashed-line");
-            divider.setEndY(145.0);
-            divider.setStroke(Paint.valueOf("WHITE"));
-            divider.setStrokeWidth(2.0);
-            gridTop.setRowSpan(divider, GridPane.REMAINING);
-            gridTop.setHalignment(divider, HPos.LEFT);
-
-            gridTop.getChildren().add(divider);
-            gridBottom.getChildren().add(divider);
-        }
-        System.out.println("debugger04");
-        anchorPaneContainer.getChildren().add(gridTop);
-        anchorPaneContainer.getChildren().add(gridBottom);
-    }
 
     // -----------------------------------------------------------------------------------
     public Race() {
@@ -156,6 +67,8 @@ public class Race extends AnchorPane implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
     public void initPlayer(String host, int port, String username) {
@@ -178,20 +91,90 @@ public class Race extends AnchorPane implements Initializable {
         System.out.println("Racing Scene Initialized");
     }
 
+
+    // -----------------------------------------------------------------------------------
+    private ImageView createImageViewNode(String urlPath) {
+        URL fxmlURL = getClass().getResource(urlPath);
+        Image img = new Image(fxmlURL.toExternalForm(), 25, 25, true, true);
+        ImageView imageViewNode = new ImageView();
+        imageViewNode.setImage(img);
+        return imageViewNode;
+    }
+
+    private GridPane initializeGridPane(int anchorX) {
+        GridPane gridPane = new GridPane();
+        gridPane.getStyleClass().add("racing-grid");
+        gridPane.setPrefHeight(145.0);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setPrefWidth(690.0);
+        AnchorPane.setLeftAnchor(gridPane, 55.0);
+        if (anchorX > 0) {
+            AnchorPane.setTopAnchor(gridPane, 0.0);
+        } else {
+            AnchorPane.setBottomAnchor(gridPane, 0.0);
+        }
+        return gridPane;
+    }
+
+    private Line createLine(GridPane gridPane, int colIndex) {
+        Line divider = new Line();
+        divider.getStyleClass().add("racing-dashed-line");
+        divider.setEndY(145.0);
+        divider.setStroke(Paint.valueOf("WHITE"));
+        divider.setStrokeWidth(2.0);
+        GridPane.setColumnIndex(divider, colIndex);
+        gridPane.setRowSpan(divider, GridPane.REMAINING);
+        gridPane.setHalignment(divider, HPos.LEFT);
+        return divider;
+    }
+
+    private void setRoadLength(String maxLength) {
+        GridPane gridTop = initializeGridPane(1);
+        GridPane gridBottom = initializeGridPane(-1);
+
+        for (int i = 0; i < Integer.parseInt(maxLength); i++) {
+            System.out.println("debugger03");
+            ColumnConstraints column = new ColumnConstraints();
+            column.setHgrow(Priority.NEVER);
+            column.setPrefWidth(690.0/Double.parseDouble(maxLength));
+
+            gridTop.getColumnConstraints().add(column);
+            gridBottom.getColumnConstraints().add(column);
+        }
+
+        for (int j = 0; j < 2; j++) {
+            RowConstraints row = new RowConstraints();
+            row.setVgrow(Priority.NEVER);
+            row.setPrefHeight(73.5);
+
+            gridTop.getRowConstraints().add(row);
+            gridBottom.getRowConstraints().add(row);
+        }
+
+        for (int y = 0; y <= Integer.parseInt(maxLength); y++) {
+            Line dividerTop = createLine(gridTop, y);
+            Line dividerBottom = createLine(gridBottom, y);
+            gridTop.getChildren().add(dividerTop);
+            gridBottom.getChildren().add(dividerBottom);
+        }
+
+        anchorPaneContainer.getChildren().add(gridTop);
+        anchorPaneContainer.getChildren().add(gridBottom);
+    }
+    // -----------------------------------------------------------------------------------
     public class PlayerConnector implements Runnable {
         Socket socket;
         Thread thread;
         DataInputStream inputStream;
         DataOutputStream outputStream;
-        HashMap<String, String> connected = new HashMap<String, String>();
+        HashMap<String, String> connected = new HashMap<>();
 
-        ArrayList<String> updatedScoreList = new ArrayList<String>();
+        ArrayList<String> updatedScoreList = new ArrayList<>();
         String userName;
         String host;
         int port;
 
         String maxNumberQuestion;
-        String numPlayers;
         String score;
         String question;
         String otherScores;
@@ -220,18 +203,14 @@ public class Race extends AnchorPane implements Initializable {
 
                 String status = info.split(" ")[0];
                 String maxNumQuestions = info.split(" ")[3];
-                String numPlayers = info.split(" ")[4];
 
                 if (status.equals("successful")) {
                     System.out.println(userName + " logged in successfully");
                     connected.put("status", "true");
 
                     this.maxNumberQuestion = maxNumQuestions;
-                    this.numPlayers = numPlayers;
                     System.out.println("debugger01");
-                    Platform.runLater(() -> {
-                        setRoadLength(this.maxNumberQuestion);
-                    });
+                    Platform.runLater(() -> setRoadLength(this.maxNumberQuestion));
 
                     racingUIRoom.setText(this.host+":"+this.port);
                     racingUILength.setText(this.maxNumberQuestion);
@@ -299,10 +278,10 @@ public class Race extends AnchorPane implements Initializable {
             int co = 0;
             String[] imgURLs = {"banhmi", "chair", "nonla", "toong", "fin"};
             String[] playersScore = otherScores.split(" ");
-            ArrayList<HBox> scoreboardHBox = new ArrayList<HBox>();
-            for (int i = 0; i < playersScore.length; i++) {
-                String userName = playersScore[i].split(":")[0];
-                String score = playersScore[i].split(":")[1];
+            ArrayList<HBox> scoreboardHBox = new ArrayList<>();
+            for (String s : playersScore) {
+                String userName = s.split(":")[0];
+                String score = s.split(":")[1];
                 HBox hbox = new HBox();
                 hbox.setAlignment(Pos.CENTER_LEFT);
                 hbox.setPrefHeight(100.0);
@@ -317,24 +296,27 @@ public class Race extends AnchorPane implements Initializable {
 
 
                 if (co >= 4) co = -1;
-                String urlPath = "resources/player/player-"+imgURLs[++co]+".png";
-                ImageView imageViewNode = createImageViewNode(urlPath, 25);
+                String urlPath = "resources/player/player-" + imgURLs[++co] + ".png";
+                ImageView imageViewNode = createImageViewNode(urlPath);
 
-                hbox.getChildren().addAll(imageViewNode, textNode, scoreNode);
-                scoreboardHBox.add(hbox);
+                Platform.runLater(() -> {
+                    hbox.getChildren().addAll(imageViewNode, textNode, scoreNode);
+                    scoreboardHBox.add(hbox);
+
+                });
             }
 
             Platform.runLater(() -> {
-                int counter = 0;
                 gridPaneSmallScore.getChildren().clear();
-
+                int counter = 0;
                 for (int x = 0; x < 2; x++) {
-                    if (counter > Integer.parseInt(this.numPlayers)) break;
+
+                    if (counter > playersScore.length) break;
                     for (int y = 0; y < 2; y++) {
+                        System.out.println("adding to grid hbox: " + scoreboardHBox.get(counter).toString());
                         gridPaneSmallScore.add(scoreboardHBox.get(counter), x, y);
-                        System.out.println("counter"+counter);
                         counter++;
-                        if (counter > Integer.parseInt(this.numPlayers)) break;
+                        if (counter > playersScore.length) break;
                     }
                 }
             });
@@ -377,7 +359,7 @@ public class Race extends AnchorPane implements Initializable {
                     return;
                 }
                 if (updateScore() && updateQuestion() && updateOtherScores()) {
-                    Platform.runLater(() -> {
+                    Platform.runLater(()->{
                         submitResult.setDisable(false);
 
                         submitResult.getStyleClass().clear();
@@ -387,11 +369,13 @@ public class Race extends AnchorPane implements Initializable {
                         questionResult.getStyleClass().add("racing-numbers");
 
                         inputResult.clear();
+                    });
 
-                        int prevScore = Integer.parseInt(scoreResult.getText());
-                        int nextScore = Integer.parseInt(getCurrentScore());
+                    int prevScore = Integer.parseInt(scoreResult.getText());
+                    int nextScore = Integer.parseInt(getCurrentScore());
+
+                    Platform.runLater(() -> {
                         String updatedScore = Integer.toString(nextScore-prevScore);
-                        System.out.println("Curent:" + updatedScore);
                         if (Integer.parseInt(updatedScore) > 0) {
                             updatedScore = "+" + updatedScore;
                         }
@@ -404,7 +388,6 @@ public class Race extends AnchorPane implements Initializable {
                             Text textScore = new Text(updatedScore);
                             textUsername.getStyleClass().add("noti-text-username");
                             textScore.getStyleClass().add("noti-text");
-
                             notiMessage.getChildren().addAll(textUsername, textScore);
                             notiBoard.getChildren().add(notiMessage);
                             scrollPane.setVvalue(1D);

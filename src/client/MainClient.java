@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 // get the functionalities for JavaFX through Application
 public class MainClient extends Application {
 
-    Scene scene1, scene2, scene3, scene4, scene5, scene6;
+    Scene scene1, scene2, scene3, scene6;
     static Stage stage;
     public static Race raceScene;
     public static Waitroom waitScene;
@@ -29,8 +29,6 @@ public class MainClient extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("menu.fxml"));
         Parent rootRules = FXMLLoader.load(getClass().getResource("rules.fxml"));
         Parent rootRegister = FXMLLoader.load(getClass().getResource("register.fxml"));
-//        Parent rootWaitroom = FXMLLoader.load(getClass().getResource("waitroom.fxml"));
-//        Parent rootRacing = FXMLLoader.load(getClass().getResource("racing.fxml"));
         Parent rootMessage = FXMLLoader.load(getClass().getResource("message-scene.fxml"));
 
         raceScene = new Race();
@@ -56,10 +54,8 @@ public class MainClient extends Application {
         // Layout 4
         waitScene.getScene().getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
         waitScene.getScene().getStylesheets().add(getClass().getResource("css/waitroom.css").toExternalForm());
-//        scene4 = new Scene(rootWaitroom, 800, 575);
 
         // Layout 5
-
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/waitroom.css").toExternalForm());
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/racing.css").toExternalForm());
