@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -16,10 +17,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -45,7 +45,10 @@ public class Race extends AnchorPane implements Initializable {
             playerSmallScore1, playerSmallScore2, playerSmallScore3, playerSmallScore4;
 
     @FXML
-    private GridPane gridPaneSmallScore;
+    AnchorPane anchorPaneContainer;
+
+    @FXML
+    private GridPane gridPaneSmallScore, gridPaneTop, gridPaneBottom;
 
     @FXML
     private VBox notiBoard;
@@ -72,7 +75,76 @@ public class Race extends AnchorPane implements Initializable {
     };
 
     // -----------------------------------------------------------------------------------
+    private ImageView createImageViewNode(String urlPath, int sizeValue) {
+        URL fxmlURL = getClass().getResource(urlPath);
+        Image img = new Image(fxmlURL.toExternalForm(), sizeValue, sizeValue, true, true);
+        ImageView imageViewNode = new ImageView();
+        imageViewNode.setImage(img);
+        return imageViewNode;
+    }
 
+    private GridPane initializeGridPane(double anchorLeft, double anchorTop) {
+        GridPane gridPane = new GridPane();
+        gridPane.getStyleClass().add("racing-grid");
+        gridPane.setPrefHeight(145.0);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setPrefWidth(690.0);
+        AnchorPane.setLeftAnchor(gridPane, anchorLeft);
+        AnchorPane.setTopAnchor(gridPane, anchorTop);
+        return gridPane;
+    }
+
+    private void setRoadLength(String maxLength) {
+        System.out.println("debugger02");
+//        <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line"
+//        GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />
+//        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="138.0" />
+
+//         fx:id="gridPaneTop" minWidth="-Infinity" prefHeight="145.0" prefWidth="690.0"
+//         styleClass="racing-grid" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="0.0"
+
+//        fx:id="gridPaneBottom" alignment="CENTER" layoutX="65.0" layoutY="10.0"
+//        maxWidth="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="690.0"
+//        styleClass="racing-grid" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="55.0"
+
+        GridPane gridTop = initializeGridPane(55.0, 0.0);
+        GridPane gridBottom = initializeGridPane(55.0, 0.0);
+
+        for (int i = 0; i < Integer.parseInt(maxLength); i++) {
+            System.out.println("debugger03");
+            ColumnConstraints column = new ColumnConstraints();
+            column.setHgrow(Priority.NEVER);
+            column.setPrefWidth((double)690.0/Double.parseDouble(maxLength));
+            gridTop.getColumnConstraints().add(column);
+            gridBottom.getColumnConstraints().add(column);
+        }
+
+        for (int j = 0; j < 2; j++) {
+            RowConstraints row = new RowConstraints();
+            row.setVgrow(Priority.NEVER);
+            row.setPrefHeight(73.5);;
+            gridTop.getRowConstraints().add(row);
+            gridBottom.getRowConstraints().add(row);
+        }
+
+        for (int y = 0; y < Integer.parseInt(maxLength); y++) {
+            Line divider = new Line();
+            divider.getStyleClass().add("racing-dashed-line");
+            divider.setEndY(145.0);
+            divider.setStroke(Paint.valueOf("WHITE"));
+            divider.setStrokeWidth(2.0);
+            gridTop.setRowSpan(divider, GridPane.REMAINING);
+            gridTop.setHalignment(divider, HPos.LEFT);
+
+            gridTop.getChildren().add(divider);
+            gridBottom.getChildren().add(divider);
+        }
+        System.out.println("debugger04");
+        anchorPaneContainer.getChildren().add(gridTop);
+        anchorPaneContainer.getChildren().add(gridBottom);
+    }
+
+    // -----------------------------------------------------------------------------------
     public Race() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("racing.fxml"));
         loader.setRoot(this);
@@ -119,6 +191,7 @@ public class Race extends AnchorPane implements Initializable {
         int port;
 
         String maxNumberQuestion;
+        String numPlayers;
         String score;
         String question;
         String otherScores;
@@ -147,12 +220,18 @@ public class Race extends AnchorPane implements Initializable {
 
                 String status = info.split(" ")[0];
                 String maxNumQuestions = info.split(" ")[3];
+                String numPlayers = info.split(" ")[4];
 
                 if (status.equals("successful")) {
                     System.out.println(userName + " logged in successfully");
                     connected.put("status", "true");
 
                     this.maxNumberQuestion = maxNumQuestions;
+                    this.numPlayers = numPlayers;
+                    System.out.println("debugger01");
+                    Platform.runLater(() -> {
+                        setRoadLength(this.maxNumberQuestion);
+                    });
 
                     racingUIRoom.setText(this.host+":"+this.port);
                     racingUILength.setText(this.maxNumberQuestion);
@@ -236,12 +315,10 @@ public class Race extends AnchorPane implements Initializable {
                 Text scoreNode = new Text(score);
                 scoreNode.getStyleClass().add("player-small-score");
 
-                ImageView imageViewNode = new ImageView();
+
                 if (co >= 4) co = -1;
                 String urlPath = "resources/player/player-"+imgURLs[++co]+".png";
-                URL fxmlURL = getClass().getResource(urlPath);
-                Image img = new Image(fxmlURL.toExternalForm(), 25, 25, true, true);
-                imageViewNode.setImage(img);
+                ImageView imageViewNode = createImageViewNode(urlPath, 25);
 
                 hbox.getChildren().addAll(imageViewNode, textNode, scoreNode);
                 scoreboardHBox.add(hbox);
@@ -250,10 +327,14 @@ public class Race extends AnchorPane implements Initializable {
             Platform.runLater(() -> {
                 int counter = 0;
                 gridPaneSmallScore.getChildren().clear();
+
                 for (int x = 0; x < 2; x++) {
+                    if (counter > Integer.parseInt(this.numPlayers)) break;
                     for (int y = 0; y < 2; y++) {
                         gridPaneSmallScore.add(scoreboardHBox.get(counter), x, y);
-                        ++counter;
+                        System.out.println("counter"+counter);
+                        counter++;
+                        if (counter > Integer.parseInt(this.numPlayers)) break;
                     }
                 }
             });
