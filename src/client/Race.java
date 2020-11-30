@@ -55,6 +55,8 @@ public class Race extends AnchorPane implements Initializable {
 
     Scene scene;
 
+    GridPane gridTop, gridBottom;
+
     // -----------------------------------------------------------------------------------
     public Race() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("racing.fxml"));
@@ -93,9 +95,9 @@ public class Race extends AnchorPane implements Initializable {
 
 
     // -----------------------------------------------------------------------------------
-    private ImageView createImageViewNode(String urlPath) {
+    private ImageView createImageViewNode(String urlPath, int size) {
         URL fxmlURL = getClass().getResource(urlPath);
-        Image img = new Image(fxmlURL.toExternalForm(), 25, 25, true, true);
+        Image img = new Image(fxmlURL.toExternalForm(), size, size, true, true);
         ImageView imageViewNode = new ImageView();
         imageViewNode.setImage(img);
         return imageViewNode;
@@ -129,11 +131,10 @@ public class Race extends AnchorPane implements Initializable {
     }
 
     private void setRoadLength(String maxLength) {
-        GridPane gridTop = initializeGridPane(1);
-        GridPane gridBottom = initializeGridPane(-1);
+        gridTop = initializeGridPane(1);
+        gridBottom = initializeGridPane(-1);
 
         for (int i = 0; i < Integer.parseInt(maxLength); i++) {
-            System.out.println("debugger03");
             ColumnConstraints column = new ColumnConstraints();
             column.setHgrow(Priority.NEVER);
             column.setPrefWidth(690.0/Double.parseDouble(maxLength));
@@ -154,6 +155,7 @@ public class Race extends AnchorPane implements Initializable {
         for (int y = 0; y <= Integer.parseInt(maxLength); y++) {
             Line dividerTop = createLine(gridTop, y);
             Line dividerBottom = createLine(gridBottom, y);
+
             gridTop.getChildren().add(dividerTop);
             gridBottom.getChildren().add(dividerBottom);
         }
@@ -174,6 +176,7 @@ public class Race extends AnchorPane implements Initializable {
         String host;
         int port;
 
+        String imgName;
         String maxNumberQuestion;
         String score;
         String question;
@@ -275,13 +278,42 @@ public class Race extends AnchorPane implements Initializable {
         }
 
         private void updateOtherPlayerUI(String otherScores) {
-            int co = 0;
             String[] imgURLs = {"banhmi", "chair", "nonla", "toong", "fin"};
             String[] playersScore = otherScores.split(" ");
+
             ArrayList<HBox> scoreboardHBox = new ArrayList<>();
-            for (String s : playersScore) {
-                String userName = s.split(":")[0];
-                String score = s.split(":")[1];
+
+            int co = 0;
+            for (int i = 0; i < playersScore.length; i++) {
+                String userName = playersScore[i].split(":")[0];
+                String score = playersScore[i].split(":")[1];
+                int tmpScore = Integer.parseInt(score);
+                String urlPathRoad = "resources/player/player-" + imgURLs[i] + ".png";
+                ImageView playerImageRoad = createImageViewNode(urlPathRoad, 25);
+//                    gridTop.getChildren().clear();
+//                    gridBottom.getChildren().clear();
+//                     nhớ set if tmpScore <= 0
+//                    GridPane.setRowIndex(playerImageRoad, i);
+//                    GridPane.setColumnIndex(playerImageRoad, tmpScore-1);
+//
+//                    switch (i) {
+//                        case 0:
+//                        case 1:
+//                            gridTop.setRowSpan(playerImageRoad, GridPane.REMAINING);
+//                            gridTop.setHalignment(playerImageRoad, HPos.CENTER);
+//                            gridTop.setAlignment(Pos.CENTER);
+//                            gridTop.getChildren().add(playerImageRoad);
+//                            break;
+//                        case 2:
+//                        case 3:
+//                            gridBottom.setRowSpan(playerImageRoad, GridPane.REMAINING);
+//                            gridBottom.setHalignment(playerImageRoad, HPos.CENTER);
+//                            gridBottom.setAlignment(Pos.CENTER);
+//                            gridBottom.getChildren().add(playerImageRoad);
+//                            break;
+
+
+
                 HBox hbox = new HBox();
                 hbox.setAlignment(Pos.CENTER_LEFT);
                 hbox.setPrefHeight(100.0);
@@ -294,21 +326,60 @@ public class Race extends AnchorPane implements Initializable {
                 Text scoreNode = new Text(score);
                 scoreNode.getStyleClass().add("player-small-score");
 
-
                 if (co >= 4) co = -1;
                 String urlPath = "resources/player/player-" + imgURLs[++co] + ".png";
-                ImageView imageViewNode = createImageViewNode(urlPath);
+                ImageView imageViewNode = createImageViewNode(urlPath, 25);
 
+
+                if (userName.equals(this.userName)) {
+                    this.imgName = imgURLs[co];
+                }
                 Platform.runLater(() -> {
                     hbox.getChildren().addAll(imageViewNode, textNode, scoreNode);
                     scoreboardHBox.add(hbox);
-
                 });
             }
 
-            Platform.runLater(() -> {
+            Platform.runLater(()->{
+                setRoadLength(this.maxNumberQuestion);
                 gridPaneSmallScore.getChildren().clear();
                 int counter = 0;
+                String urlPathRoad;
+                ImageView playerImageRoad;
+                for (int i = 0; i < playersScore.length; i++) {
+                    String userName = playersScore[i].split(":")[0];
+                    String score = playersScore[i].split(":")[1];
+                    int tmpScore = Integer.parseInt(score);
+                    urlPathRoad = "resources/player/player-" + imgURLs[i] + ".png";
+                    playerImageRoad = createImageViewNode(urlPathRoad, 25);
+                    gridTop.getChildren().clear();
+                    gridBottom.getChildren().clear();
+
+                    GridPane.setRowIndex(playerImageRoad, i);
+                    if (tmpScore > 0) {
+                        GridPane.setColumnIndex(playerImageRoad, tmpScore - 1);
+                    } else {
+                        GridPane.setColumnIndex(playerImageRoad, 0);
+                    }
+
+
+                    switch (i) {
+                        case 0:
+                        case 1:
+                            gridTop.setRowSpan(playerImageRoad, GridPane.REMAINING);
+                            gridTop.setHalignment(playerImageRoad, HPos.CENTER);
+                            gridTop.setAlignment(Pos.CENTER);
+                            gridTop.getChildren().add(playerImageRoad);
+                            break;
+                        case 2:
+                        case 3:
+                            gridBottom.setRowSpan(playerImageRoad, GridPane.REMAINING);
+                            gridBottom.setHalignment(playerImageRoad, HPos.CENTER);
+                            gridBottom.setAlignment(Pos.CENTER);
+                            gridBottom.getChildren().add(playerImageRoad);
+                            break;
+                    }
+                }
                 for (int x = 0; x < 2; x++) {
 
                     if (counter > playersScore.length) break;
@@ -320,6 +391,24 @@ public class Race extends AnchorPane implements Initializable {
                     }
                 }
             });
+
+
+            // update Road
+//            Line divider = new Line();
+//            divider.getStyleClass().add("racing-dashed-line");
+//            divider.setEndY(145.0);
+//            divider.setStroke(Paint.valueOf("WHITE"));
+//            divider.setStrokeWidth(2.0);
+//
+//            //<ImageView fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
+//// preserveRatio="true" styleClass="player-small-icon"
+//// GridPane.columnIndex="2" GridPane.halignment="CENTER">
+//            String urlPath = "resources/player/player-" + imgURLs[++co] + ".png";
+//            ImageView playerImage = createImageViewNode("")
+//            GridPane.setColumnIndex(divider, colIndex);
+//            gridPane.setRowSpan(divider, GridPane.REMAINING);
+//            gridTop.setHalignment(divider, HPos.LEFT);
+//            gridTop.getChildren().add(dividerTop);
         }
         // ---------------------------------------------------------------------------------
         public String getCurrentScore() {
@@ -351,11 +440,12 @@ public class Race extends AnchorPane implements Initializable {
             while (thread != null) {
                 System.out.println("Run..."+ questionCounter + "-" + maxNumberQuestion);
                 if (questionCounter == Integer.parseInt(maxNumberQuestion)) {
-                    boolean tmp = updateScore() && updateOtherScores();
+//                    boolean tmp = updateScore() && updateOtherScores();
                     // chúc bạn may mắn lần sau!
                     // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
-
-                    System.out.println("finalscore: " + score + ": " + tmp);
+                    // chuyển trang
+                    System.out.println("hú final");
+                    System.out.println("finalscore: " + score);
                     return;
                 }
                 if (updateScore() && updateQuestion() && updateOtherScores()) {
@@ -375,6 +465,12 @@ public class Race extends AnchorPane implements Initializable {
                     int nextScore = Integer.parseInt(getCurrentScore());
 
                     Platform.runLater(() -> {
+                        // nextScore: 1, đi tới index 0
+                        // nextScore: 5, đi tới index 4
+                        // ban đầu tất cả đều ở ngoài Bãi đậu
+
+//               <Image url="@resources/player/player-fin.png" />
+//            </ImageView>
                         String updatedScore = Integer.toString(nextScore-prevScore);
                         if (Integer.parseInt(updatedScore) > 0) {
                             updatedScore = "+" + updatedScore;
