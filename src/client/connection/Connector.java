@@ -101,6 +101,28 @@ public class Connector {
 		}
 	}
 	// ------------------------------------------------------------------------------
+	public boolean updateGameStatus() {
+		
+    	/*
+    	 * return true if game is continue, false if game is over (winner found)
+    	 * */
+    	
+    	try {
+    		
+    		String status = this.inputStream.readUTF();
+    		System.out.println("game status: " + status);
+    		
+    		if (status.equals("winnerNotFound")) {
+    			return true;        			
+    		}
+    		return false;
+    	}
+    	catch (IOException e) {
+    		e.printStackTrace();
+    		return false;
+    	}
+	}
+	// ------------------------------------------------------------------------------
 	public boolean submitAnswer(String answer) {
 		
 		// send result back to the server
@@ -145,7 +167,10 @@ public class Connector {
 
 		// playing game
 		String answer;
-		while (connector.updateScore() && connector.updateQuestion() && connector.updateOtherScores()) {
+		while (connector.updateScore() 
+				&& connector.updateQuestion() 
+				&& connector.updateOtherScores()
+				&& connector.updateGameStatus()) {
 			// unable to updateScore means server disconnected
 			
 			System.out.println("score: " + connector.getCurrentScore());			

@@ -8,8 +8,8 @@ import java.net.Socket;
 public class MainServer extends Thread {
 	
 	private static final int port = 8080;
-	private static final int maxNumQuestions = 26;				// maximum number of questions
-	private static final int maxNumPlayers = 4;					// maximum number of players per room
+	private static final int maxScore = 10;						// maximum score to win game
+	private static final int maxNumPlayers = 2;					// maximum number of players per room
 	private static final int maxNumRooms = 3;					// maximum number of room concurrently
 	private static ServerSocket listener;
 	
@@ -36,7 +36,7 @@ public class MainServer extends Thread {
 	private void generatePlayersThread() throws IOException {
 		
 		for (int i = 0; i < maxNumPlayers; i ++) {
-			clientHandlers[i] = new ClientHandler(clients[i], roomId, maxNumPlayers, maxNumQuestions, maxNumRooms);
+			clientHandlers[i] = new ClientHandler(clients[i], roomId, maxNumPlayers, maxScore, maxNumRooms);
 		}		
 	}
 	// ----------------------------------------------------------------------------------
@@ -62,8 +62,14 @@ public class MainServer extends Thread {
 	private void waitForPlayersAnswers() throws InterruptedException {
 		
 		for (int i = 0; i < maxNumPlayers; i++) {
+			
 			clientHandlers[i].join();
 		}
+	}
+	// ----------------------------------------------------------------------------------
+	public boolean foundWinningPlayer() {
+		
+		return ClientHandler.foundWinningPlayer(roomId, maxScore);
 	}
 	// ----------------------------------------------------------------------------------
 	public void closePlayersThreads() throws IOException {
@@ -83,14 +89,16 @@ public class MainServer extends Thread {
 	public void run() {
 		
 		try {
-			for (int questionIndex = 0; questionIndex < maxNumQuestions; questionIndex ++) {
-				
+// 			for (int questionIndex = 0; questionIndex < maxScore; questionIndex ++) {
+
+			do {
 				generatePlayersThread();
 				registerBeforeGame();
 				generateQuestionsForPlayersInRoom();
 				sendQuestionToPlayers();
 				waitForPlayersAnswers();
 			}	
+			while (foundWinningPlayer() == false);
 			
 			closePlayersThreads();
 		}

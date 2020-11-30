@@ -232,7 +232,7 @@ public class Race extends AnchorPane implements Initializable {
                 return connected;
             }
         }
-
+        // ------------------------------------------------------------------------------------
         public boolean updateScore() {
             try {
                 score = this.inputStream.readUTF();
@@ -255,7 +255,7 @@ public class Race extends AnchorPane implements Initializable {
                 return false;
             }
         }
-        // ---------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------
         public boolean updateOtherScores() {
         	/*
         	 * written by: Loc
@@ -273,7 +273,28 @@ public class Race extends AnchorPane implements Initializable {
         		return false;
         	}
         }
-
+        // ---------------------------------------------------------------------------------
+        public boolean updateGameStatus() {
+        	/*
+        	 * return true if game is continue, false if game is over (winner found)
+        	 * */
+        	
+        	try {
+        		
+        		String status = this.inputStream.readUTF();
+        		System.out.println("game status: " + status);
+        		
+        		if (status.equals("winnerNotFound")) {
+        			return true;        			
+        		}
+        		return false;
+        	}
+        	catch (IOException e) {
+        		e.printStackTrace();
+        		return false;
+        	}
+        }
+        // ---------------------------------------------------------------------------------
         private void updateOtherPlayerUI(String otherScores) {
             int co = 0;
             String[] imgURLs = {"banhmi", "chair", "nonla", "toong", "fin"};
@@ -358,7 +379,8 @@ public class Race extends AnchorPane implements Initializable {
                     System.out.println("finalscore: " + score + ": " + tmp);
                     return;
                 }
-                if (updateScore() && updateQuestion() && updateOtherScores()) {
+                if (updateScore() && updateQuestion() && updateOtherScores() && updateGameStatus()) {
+                	                	
                     Platform.runLater(()->{
                         submitResult.setDisable(false);
 
