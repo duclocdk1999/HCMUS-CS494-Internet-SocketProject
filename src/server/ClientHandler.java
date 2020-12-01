@@ -19,7 +19,7 @@ public class ClientHandler extends Thread {
 	
 	private final DataInputStream inputStream;
 	private final DataOutputStream outputStream;
-	private final int limitedAnswerTime = 60;						// seconds
+	private final int limitedAnswerTime;							// seconds
 	private Socket client;
 	private Player player;
 	private int maxNumPlayers;
@@ -27,14 +27,20 @@ public class ClientHandler extends Thread {
 	private int roomId;
 	
 	private static List<Map<Socket, Player>> socketPlayerMap;		// client (Socket) --> name (String)
-	private static List<Player> fastestPlayers;						// fastestPlayers.get(roomId)
+	private static List<Player> fasttestPlayers;						// fastestPlayers.get(roomId)
 	private static List<Integer> losePoints;						// losePoints.get(roomId): wrong answer point will be added to fastest player
 	
 	private static Question[] questions;
 	private static String operators;	
 	private static Integer numPlayers;								// number of available successful registered players
 	// -----------------------------------------------------------------------------
-	public ClientHandler(Socket client, int roomId, int maxNumPlayers, int maxScore, int maxNumRooms) throws IOException {
+	public ClientHandler(
+			Socket client, 
+			int roomId,
+			int maxNumPlayers, 
+			int maxScore, 
+			int maxNumRooms, 
+			int limitedAnswerTime) throws IOException {
 		
 		this.client = client;
 		this.roomId = roomId;
@@ -42,16 +48,17 @@ public class ClientHandler extends Thread {
 		this.outputStream = new DataOutputStream(client.getOutputStream());
 		this.maxNumPlayers = maxNumPlayers;
 		this.maxScore = maxScore;
+		this.limitedAnswerTime = limitedAnswerTime;
 		
-		if (socketPlayerMap == null || operators == null || fastestPlayers == null) {
+		if (socketPlayerMap == null || operators == null || fasttestPlayers == null) {
 			socketPlayerMap = new ArrayList<>();
-			fastestPlayers = new ArrayList<>();
+			fasttestPlayers = new ArrayList<>();
 			losePoints = new ArrayList<>();
 			
 
 			for (int i = 0; i < maxNumRooms; i++) {
 				socketPlayerMap.add(new HashMap<>());
-				fastestPlayers.add(null);
+				fasttestPlayers.add(null);
 				losePoints.add(0);
 			}			
 			operators = "+-*/%";
@@ -159,6 +166,20 @@ public class ClientHandler extends Thread {
 		ClientHandler.questions[roomId].generateRandom();
 	}
 	// -----------------------------------------------------------------------------
+	public static boolean allPlayersLose(int roomId) {
+		/*
+		 * If all players were banned --> no one left in room 
+		 * */
+		
+		List<Player> players = new ArrayList<>(ClientHandler.socketPlayerMap.get(roomId).values());
+		for (Player player: players) {
+			if (!player.isLose()) {
+				return false;
+			}
+		}
+		return false;
+	}
+	// -----------------------------------------------------------------------------
 	public static boolean foundWinningPlayer(int roomId, int maxScore) {
 		
 		/*
@@ -210,11 +231,16 @@ public class ClientHandler extends Thread {
 		
 		if (ClientHandler.foundWinningPlayer(roomId, maxScore)) {
 			
-			this.outputStream.writeUTF("winnerFound");
+			this.outputStream.writeUTF("EndGame_WinnerFound");
+		}
+		else 
+		if (this.player.isLose()){
+			
+			this.outputStream.writeUTF("EndGame_Lose");
 		}
 		else {
 			
-			this.outputStream.writeUTF("winnerNotFound");
+			this.outputStream.writeUTF("ContinueGame");
 		}
 	}
 	// -----------------------------------------------------------------------------
@@ -237,10 +263,8 @@ public class ClientHandler extends Thread {
 
 			this.player.addScore(1);
 			
-
-			
-			if (fastestPlayers.get(roomId) == null) {
-				fastestPlayers.set(roomId, this.player);
+			if (fasttestPlayers.get(roomId) == null) {
+				fasttestPlayers.set(roomId, this.player);
 			}
 		}
 		else {
@@ -259,13 +283,13 @@ public class ClientHandler extends Thread {
 	// -----------------------------------------------------------------------------
 	private void bonusPointForFastestPlayer() {
 		
-		Player fastestPlayer = fastestPlayers.get(roomId);
+		Player fastestPlayer = fasttestPlayers.get(roomId);
 		Integer bonus = losePoints.get(roomId);
 		if (fastestPlayer != null) {
 			
 			if (fastestPlayer.getName().equals(this.player.getName())) {
 				this.player.addScore(bonus);
-				fastestPlayers.set(roomId, null);
+				fasttestPlayers.set(roomId, null);
 				losePoints.set(roomId, 0);
 			}
 		}
@@ -288,7 +312,8 @@ public class ClientHandler extends Thread {
 			sendOtherPlayerScores();
 			sendGameStatus();
 			
-			if (ClientHandler.foundWinningPlayer(roomId, maxScore) == false) {
+			this.player.display();
+			if (!ClientHandler.foundWinningPlayer(roomId, maxScore) && !this.player.isLose()) {
 				waitForAnswer();
 				
 				String answer = getAnswerFromPlayer();
@@ -310,7 +335,10 @@ public class ClientHandler extends Thread {
 		 * When the game's over, 
 		 * new players participate the room and set nickname without worrying about their previous duplicated name
 		 */
+		
 		socketPlayerMap.get(roomId).clear();
+		fasttestPlayers.set(roomId, null);
+		losePoints.set(roomId, 0);
 	}
 }
 
