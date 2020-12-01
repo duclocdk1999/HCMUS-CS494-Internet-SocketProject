@@ -1,5 +1,12 @@
 package client;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Label;
+import javafx.util.Duration;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +29,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -31,7 +37,7 @@ public class Race extends AnchorPane implements Initializable {
     public PlayerConnector connector;
 
     @FXML
-    Text questionResult, scoreResult, racingUILength, racingUIRoom;
+    Text questionResult, scoreResult, racingUILength, racingUIRoom, racingCounter;
 
     @FXML
     AnchorPane anchorPaneContainer;
@@ -49,13 +55,47 @@ public class Race extends AnchorPane implements Initializable {
     TextField inputResult;
 
     @FXML
-    Button submitResult;
+    Button submitResult, goHomeBtn;
 
     int questionCounter = 0;
 
     Scene scene;
 
     GridPane gridTop, gridBottom;
+
+    private static final Integer STARTTIME = 10;
+    private Timeline time;
+    private Label timerLabel = new Label();
+    private Integer timeSeconds = STARTTIME;
+
+    public void doTime() {
+//        Integer STARTTIME = 60;
+//        Timeline timeline;
+//        Integer timeSeconds = STARTTIME;
+        time = new Timeline();
+        if (time!=null) {
+            time.stop();
+        }
+        
+        time.setCycleCount(Timeline.INDEFINITE);
+        KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                timeSeconds--;
+                racingCounter.setText(Integer.toString(timeSeconds));
+                if (timeSeconds < 0) {
+                    time.stop();
+                }
+
+            }
+        });
+        time.getKeyFrames().add(frame);
+        time.playFromStart();
+
+//        // Configure the Label
+//        racingCounter.setText(timeSeconds.toString());
+    }
+
 
     // -----------------------------------------------------------------------------------
     public Race() {
@@ -108,8 +148,8 @@ public class Race extends AnchorPane implements Initializable {
         gridPane.getStyleClass().add("racing-grid");
         gridPane.setPrefHeight(145.0);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setPrefWidth(690.0);
-        AnchorPane.setLeftAnchor(gridPane, 55.0);
+        gridPane.setPrefWidth(800.0);
+        AnchorPane.setLeftAnchor(gridPane, 0.0);
         if (anchorX > 0) {
             AnchorPane.setTopAnchor(gridPane, 0.0);
         } else {
@@ -118,26 +158,32 @@ public class Race extends AnchorPane implements Initializable {
         return gridPane;
     }
 
-    private Line createLine(GridPane gridPane, int colIndex) {
+    private Line createLine(int colIndex) {
         Line divider = new Line();
         divider.getStyleClass().add("racing-dashed-line");
         divider.setEndY(145.0);
         divider.setStroke(Paint.valueOf("WHITE"));
         divider.setStrokeWidth(2.0);
         GridPane.setColumnIndex(divider, colIndex);
-        gridPane.setRowSpan(divider, GridPane.REMAINING);
-        gridPane.setHalignment(divider, HPos.LEFT);
+        GridPane.setRowSpan(divider, GridPane.REMAINING);
+        GridPane.setHalignment(divider, HPos.LEFT);
         return divider;
     }
 
     private void setRoadLength(String maxLength) {
         gridTop = initializeGridPane(1);
         gridBottom = initializeGridPane(-1);
+        double initialLen = 55.0;
+        double remainder = 800.0-initialLen*2;
 
-        for (int i = 0; i < Integer.parseInt(maxLength); i++) {
+        for (int i = 0; i < Integer.parseInt(maxLength)+1; i++) {
             ColumnConstraints column = new ColumnConstraints();
             column.setHgrow(Priority.NEVER);
-            column.setPrefWidth(690.0/Double.parseDouble(maxLength));
+            if (i == 0 || i == Integer.parseInt(maxLength)) {
+                column.setPrefWidth(initialLen);
+            } else {
+                column.setPrefWidth(remainder/(Double.parseDouble(maxLength)-1));
+            }
 
             gridTop.getColumnConstraints().add(column);
             gridBottom.getColumnConstraints().add(column);
@@ -152,16 +198,14 @@ public class Race extends AnchorPane implements Initializable {
             gridBottom.getRowConstraints().add(row);
         }
 
-        for (int y = 0; y <= Integer.parseInt(maxLength); y++) {
-            Line dividerTop = createLine(gridTop, y);
-            Line dividerBottom = createLine(gridBottom, y);
+        for (int y = 1; y <= Integer.parseInt(maxLength); y++) {
+            Line dividerTop = createLine(y);
+            Line dividerBottom = createLine(y);
 
             gridTop.getChildren().add(dividerTop);
             gridBottom.getChildren().add(dividerBottom);
         }
 
-        gridTop.setAlignment(Pos.CENTER);
-        gridBottom.setAlignment(Pos.CENTER);
         anchorPaneContainer.getChildren().add(gridTop);
         anchorPaneContainer.getChildren().add(gridBottom);
     }
@@ -178,8 +222,9 @@ public class Race extends AnchorPane implements Initializable {
         String host;
         int port;
 
+        int timer = 60;
         String imgName;
-        String maxNumberQuestion;
+        String maxScore;
         String score;
         String question;
         String otherScores;
@@ -211,26 +256,22 @@ public class Race extends AnchorPane implements Initializable {
 
                 if (status.equals("successful")) {
                     String maxNumQuestions = info.split(" ")[3];
-                    System.out.println("maxNumQuestions"+maxNumQuestions);
 
                     System.out.println(userName + " logged in successfully");
                     connected.put("status", "true");
 
-                    this.maxNumberQuestion = maxNumQuestions;
+                    this.maxScore = maxNumQuestions;
                     System.out.println("debugger01");
-                    Platform.runLater(() -> setRoadLength(this.maxNumberQuestion));
+
+                    doTime();
+                    Platform.runLater(() -> setRoadLength(this.maxScore));
 
                     racingUIRoom.setText(this.host+":"+this.port);
-                    racingUILength.setText(this.maxNumberQuestion);
+                    racingUILength.setText(this.maxScore);
 
                     return connected;
                 }
                 System.out.println("Logged in failed");
-                connected.put("status", "false");
-                return connected;
-            } catch (UnknownHostException e) {
-                System.out.println("Logged in failed");
-                e.printStackTrace();
                 connected.put("status", "false");
                 return connected;
             } catch (IOException e) {
@@ -245,6 +286,8 @@ public class Race extends AnchorPane implements Initializable {
             try {
                 score = this.inputStream.readUTF();
                 System.out.println(score);
+
+                timeSeconds = STARTTIME;
                 return true;
             } catch (NumberFormatException | IOException e) {
                 e.printStackTrace();
@@ -291,12 +334,9 @@ public class Race extends AnchorPane implements Initializable {
         		
         		String status = this.inputStream.readUTF();
         		System.out.println("game status: " + status);
-        		
-        		if (status.equals("winnerNotFound")) {
-        			return true;        			
-        		}
-        		return false;
-        	}
+
+                return status.equals("winnerNotFound");
+            }
         	catch (IOException e) {
         		e.printStackTrace();
         		return false;
@@ -306,7 +346,7 @@ public class Race extends AnchorPane implements Initializable {
         private void updateOtherPlayerUI(String otherScores) {
             String[] imgURLs = {"banhmi", "chair", "nonla", "toong", "fin"};
             String[] playersScore = otherScores.split(" ");
-
+            int maxScore = Integer.parseInt(this.maxScore);
             ArrayList<HBox> scoreboardHBox = new ArrayList<>();
 
             Platform.runLater(()-> {
@@ -322,7 +362,7 @@ public class Race extends AnchorPane implements Initializable {
                 gridTop.getChildren().clear();
                 gridBottom.getChildren().clear();
 
-                setRoadLength(this.maxNumberQuestion);
+                setRoadLength(this.maxScore);
 
                 for (int i = 0; i < playersScore.length; i++) {
                     String userName = playersScore[i].split(":")[0];
@@ -347,35 +387,34 @@ public class Race extends AnchorPane implements Initializable {
                     String urlPath = "resources/player/player-" + imgURLs[++co] + ".png";
                     ImageView imageViewNode = createImageViewNode(urlPath, 25);
 
+                    if (tmpScore >= maxScore) {
 
-                    if (tmpScore > 0)
-                        GridPane.setColumnIndex(playerImageRoad, tmpScore - 1);
-                    else
+                        timeSeconds = STARTTIME;
+                    }
+                    // cho tới Đích
+                    if (tmpScore <= 0)
+                        // cho ra Bãi đậu
                         GridPane.setColumnIndex(playerImageRoad, 0);
+                    else GridPane.setColumnIndex(playerImageRoad, Math.min(tmpScore, maxScore));
+
+                    GridPane.setRowSpan(playerImageRoad, GridPane.REMAINING);
+                    GridPane.setHalignment(playerImageRoad, HPos.CENTER);
 
                     switch (i) {
                         case 0:
                             GridPane.setRowIndex(playerImageRoad, 0);
-                            gridTop.setRowSpan(playerImageRoad, GridPane.REMAINING);
-                            gridTop.setHalignment(playerImageRoad, HPos.CENTER);
                             gridTop.getChildren().add(playerImageRoad);
                             break;
                         case 1:
                             GridPane.setRowIndex(playerImageRoad, 1);
-                            gridTop.setRowSpan(playerImageRoad, GridPane.REMAINING);
-                            gridTop.setHalignment(playerImageRoad, HPos.CENTER);
                             gridTop.getChildren().add(playerImageRoad);
                             break;
                         case 2:
                             GridPane.setRowIndex(playerImageRoad, 0);
-                            gridBottom.setRowSpan(playerImageRoad, GridPane.REMAINING);
-                            gridBottom.setHalignment(playerImageRoad, HPos.CENTER);
                             gridBottom.getChildren().add(playerImageRoad);
                             break;
                         case 3:
                             GridPane.setRowIndex(playerImageRoad, 1);
-                            gridBottom.setRowSpan(playerImageRoad, GridPane.REMAINING);
-                            gridBottom.setHalignment(playerImageRoad, HPos.CENTER);
                             gridBottom.getChildren().add(playerImageRoad);
                             break;
                     }
@@ -448,17 +487,20 @@ public class Race extends AnchorPane implements Initializable {
         @Override
         public void run() {
             while (thread != null) {
-                System.out.println("Run..."+ questionCounter + "-" + maxNumberQuestion);
-//                if (questionCounter == Integer.parseInt(maxNumberQuestion)) {
-////                    boolean tmp = updateScore() && updateOtherScores();
-//                    // chúc bạn may mắn lần sau!
-//                    // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
-//                    // chuyển trang
-//
-//                    return;
-//                }
+                System.out.println("Run..."+ questionCounter + "-" + maxScore);
+                if (questionCounter == Integer.parseInt(maxScore)) {
+//                    boolean tmp = updateScore() && updateOtherScores();
+                    // chúc bạn may mắn lần sau!
+                    // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
+                    // chuyển trang
+
+                    return;
+                }
+
                 if (updateScore() && updateQuestion() && updateOtherScores() && updateGameStatus()) {
-                	                	
+                    time.playFromStart();
+                    timeSeconds = STARTTIME;
+
                     Platform.runLater(()->{
                         submitResult.setDisable(false);
 
