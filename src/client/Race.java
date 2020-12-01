@@ -326,7 +326,7 @@ public class Race extends AnchorPane implements Initializable {
         	}
         }
         // ---------------------------------------------------------------------------------
-        public String updateGameStatus() {
+        public boolean updateGameStatus() {
         	/*
         	 * return true if game is continue, false if game is over (winner found, player lose)
         	 * 3 types of gameStatus:
@@ -341,14 +341,21 @@ public class Race extends AnchorPane implements Initializable {
         		System.out.println("game status: " + this.gameStatus);
         		
         		if (this.gameStatus.equals("ContinueGame")) {
-        			return true;        			
+        			return true;
         		}
         		return false;
         	}
         	catch (IOException e) {
         		e.printStackTrace();
-        		return "Failed";
+        		return false;
         	}
+        }
+        // ---------------------------------------------------------------------------------
+        public void changeScene() {
+            Platform.runLater(() -> {
+                MainClient.messageScence.setScore(getCurrentScore());
+                MainClient.stage.setScene(MainClient.messageScence.getScene());
+            });
         }
         // ---------------------------------------------------------------------------------
         private void updateOtherPlayerUI(String otherScores) {
@@ -494,73 +501,76 @@ public class Race extends AnchorPane implements Initializable {
 
         @Override
         public void run() {
+//            Platform.runLater(() -> {});
             while (thread != null) {
                 System.out.println("Run..."+ questionCounter + "-" + maxScore);
-                if (questionCounter == Integer.parseInt(maxScore)) {
-//                    boolean tmp = updateScore() && updateOtherScores();
-                    // chúc bạn may mắn lần sau!
-                    // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
-                    // chuyển trang
+//                if (questionCounter == Integer.parseInt(maxScore)) {
+////                    boolean tmp = updateScore() && updateOtherScores();
+//                    // chúc bạn may mắn lần sau!
+//                    // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
+//                    // chuyển trang
+//
+//                    return;
+//                }
 
-                    return;
-                }
+                if (updateScore() && updateQuestion() && updateOtherScores()) {
+                        if (updateGameStatus()) {
+                            time.playFromStart();
+                            timeSeconds = STARTTIME;
 
+                            Platform.runLater(() -> {
+                                submitResult.setDisable(false);
 
-                if (updateScore() && updateQuestion() && updateOtherScores() ) {
-                    if(updateGameStatus() != "winnerFound") {
-                        time.playFromStart();
-                        timeSeconds = STARTTIME;
+                                submitResult.getStyleClass().clear();
+                                submitResult.getStyleClass().add("button-rounded");
 
-                        Platform.runLater(() -> {
-                            submitResult.setDisable(false);
+                                questionResult.getStyleClass().clear();
+                                questionResult.getStyleClass().add("racing-numbers");
 
-                            submitResult.getStyleClass().clear();
-                            submitResult.getStyleClass().add("button-rounded");
+                                inputResult.clear();
+                            });
 
-                            questionResult.getStyleClass().clear();
-                            questionResult.getStyleClass().add("racing-numbers");
+                            int prevScore = Integer.parseInt(scoreResult.getText());
+                            int nextScore = Integer.parseInt(getCurrentScore());
 
-                            inputResult.clear();
-                        });
-
-                        int prevScore = Integer.parseInt(scoreResult.getText());
-                        int nextScore = Integer.parseInt(getCurrentScore());
-
-                        Platform.runLater(() -> {
-                            // nextScore: 1, đi tới index 0
-                            // nextScore: 5, đi tới index 4
-                            // ban đầu tất cả đều ở ngoài Bãi đậu
+                            Platform.runLater(() -> {
+                                // nextScore: 1, đi tới index 0
+                                // nextScore: 5, đi tới index 4
+                                // ban đầu tất cả đều ở ngoài Bãi đậu
 
 //               <Image url="@resources/player/player-fin.png" />
 //            </ImageView>
-                            String updatedScore = Integer.toString(nextScore - prevScore);
-                            if (Integer.parseInt(updatedScore) > 0) {
-                                updatedScore = "+" + updatedScore;
-                            }
-                            if (!updatedScore.equals("0")) {
-                                updatedScore += " bước";
-                                updatedScoreList.add(updatedScore);
+                                String updatedScore = Integer.toString(nextScore - prevScore);
+                                if (Integer.parseInt(updatedScore) > 0) {
+                                    updatedScore = "+" + updatedScore;
+                                }
+                                if (!updatedScore.equals("0")) {
+                                    updatedScore += " bước";
+                                    updatedScoreList.add(updatedScore);
 
-                                HBox notiMessage = new HBox();
-                                Text textUsername = new Text(this.userName);
-                                Text textScore = new Text(updatedScore);
-                                textUsername.getStyleClass().add("noti-text-username");
-                                textScore.getStyleClass().add("noti-text");
-                                notiMessage.getChildren().addAll(textUsername, textScore);
-                                notiBoard.getChildren().add(notiMessage);
-                                scrollPane.setVvalue(1D);
-                            }
-                            scoreResult.setText(getCurrentScore());
-                            questionResult.setText(getCurrentQuestion());
-                        });
-                    } else if (updateGameStatus() == "winnerFound") {
-                        MainClient.stage.setScene(MainClient.messageScence.getScene());
+                                    HBox notiMessage = new HBox();
+                                    Text textUsername = new Text(this.userName);
+                                    Text textScore = new Text(updatedScore);
+                                    textUsername.getStyleClass().add("noti-text-username");
+                                    textScore.getStyleClass().add("noti-text");
+                                    notiMessage.getChildren().addAll(textUsername, textScore);
+                                    notiBoard.getChildren().add(notiMessage);
+                                    scrollPane.setVvalue(1D);
+                                }
+                                scoreResult.setText(getCurrentScore());
+                                questionResult.setText(getCurrentQuestion());
+                            });
+                        } else {
+                            System.out.println("Finish");
+                            break;
+//                            MainClient.stage.setScene(MainClient.messageScence.getScene());
+                        }
                     }
-                }
                 else {
                 	break;
                 }
             }
+            changeScene();
         }
     }
 }

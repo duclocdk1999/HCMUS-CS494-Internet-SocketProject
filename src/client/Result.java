@@ -17,10 +17,7 @@ import java.net.URL;
 public class Result extends AnchorPane {
     Scene scene;
     @FXML
-    Text currentWaitPlayers, maxPlayers;
-
-    @FXML
-    HBox waitPlayerBox;
+    Text messageCounter;
 
     public Result() {
         /* Initialize Waitroom */
@@ -34,5 +31,9 @@ public class Result extends AnchorPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setScore(String score) {
+        messageCounter.setText(score);
     }
 }
