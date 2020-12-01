@@ -272,7 +272,7 @@ public class Race extends AnchorPane implements Initializable {
         	
         	try {
         		otherScores = this.inputStream.readUTF();
-        		System.out.println("hello:"+otherScores);
+        		System.out.println("scores: [ " + otherScores + "]");
         		updateOtherPlayerUI(otherScores);
         		return true;
         	}
