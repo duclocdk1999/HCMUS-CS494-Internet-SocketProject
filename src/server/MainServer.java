@@ -9,7 +9,7 @@ public class MainServer extends Thread {
 	
 	private static final int port = 8080;
 	private static final int maxScore = 4;						// maximum score to win game
-	private static final int maxNumPlayers = 2;					// maximum number of players per room
+	private static final int maxNumPlayers = 3;					// maximum number of players per room
 	private static final int maxNumRooms = 3;					// maximum number of room concurrently
 	private static final int limitedAnswerTime = 60;			// 60 seconds waiting for each question
 	private static ServerSocket listener;

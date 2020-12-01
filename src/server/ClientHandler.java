@@ -222,7 +222,10 @@ public class ClientHandler extends Thread {
 		List<Player> players = new ArrayList<>(ClientHandler.socketPlayerMap.get(roomId).values());
 		String records = "";
 		for (Player player: players) {
-			records += player.getName() + ":" + player.getScore() + " ";
+			if (!player.isLose()) {
+				
+				records += player.getName() + ":" + player.getScore() + " ";				
+			}
 		}
 		this.outputStream.writeUTF(records);
 	}
