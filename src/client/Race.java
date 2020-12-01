@@ -1,5 +1,6 @@
 package client;
 
+import com.sun.tools.javac.Main;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -63,7 +64,7 @@ public class Race extends AnchorPane implements Initializable {
 
     GridPane gridTop, gridBottom;
 
-    private static final Integer STARTTIME = 10;
+    private static final Integer STARTTIME = 25;
     private Timeline time;
     private Label timerLabel = new Label();
     private Integer timeSeconds = STARTTIME;
@@ -325,7 +326,7 @@ public class Race extends AnchorPane implements Initializable {
         	}
         }
         // ---------------------------------------------------------------------------------
-        public boolean updateGameStatus() {
+        public String updateGameStatus() {
         	/*
         	 * return true if game is continue, false if game is over (winner found)
         	 * */
@@ -335,11 +336,11 @@ public class Race extends AnchorPane implements Initializable {
         		String status = this.inputStream.readUTF();
         		System.out.println("game status: " + status);
 
-                return status.equals("winnerNotFound");
+                return status;
             }
         	catch (IOException e) {
         		e.printStackTrace();
-        		return false;
+        		return "Failed";
         	}
         }
         // ---------------------------------------------------------------------------------
@@ -497,52 +498,57 @@ public class Race extends AnchorPane implements Initializable {
                     return;
                 }
 
-                if (updateScore() && updateQuestion() && updateOtherScores() && updateGameStatus()) {
-                    time.playFromStart();
-                    timeSeconds = STARTTIME;
 
-                    Platform.runLater(()->{
-                        submitResult.setDisable(false);
+                if (updateScore() && updateQuestion() && updateOtherScores() ) {
+                    if(updateGameStatus() != "winnerFound") {
+                        time.playFromStart();
+                        timeSeconds = STARTTIME;
 
-                        submitResult.getStyleClass().clear();
-                        submitResult.getStyleClass().add("button-rounded");
+                        Platform.runLater(() -> {
+                            submitResult.setDisable(false);
 
-                        questionResult.getStyleClass().clear();
-                        questionResult.getStyleClass().add("racing-numbers");
+                            submitResult.getStyleClass().clear();
+                            submitResult.getStyleClass().add("button-rounded");
 
-                        inputResult.clear();
-                    });
+                            questionResult.getStyleClass().clear();
+                            questionResult.getStyleClass().add("racing-numbers");
 
-                    int prevScore = Integer.parseInt(scoreResult.getText());
-                    int nextScore = Integer.parseInt(getCurrentScore());
+                            inputResult.clear();
+                        });
 
-                    Platform.runLater(() -> {
-                        // nextScore: 1, đi tới index 0
-                        // nextScore: 5, đi tới index 4
-                        // ban đầu tất cả đều ở ngoài Bãi đậu
+                        int prevScore = Integer.parseInt(scoreResult.getText());
+                        int nextScore = Integer.parseInt(getCurrentScore());
+
+                        Platform.runLater(() -> {
+                            // nextScore: 1, đi tới index 0
+                            // nextScore: 5, đi tới index 4
+                            // ban đầu tất cả đều ở ngoài Bãi đậu
 
 //               <Image url="@resources/player/player-fin.png" />
 //            </ImageView>
-                        String updatedScore = Integer.toString(nextScore-prevScore);
-                        if (Integer.parseInt(updatedScore) > 0) {
-                            updatedScore = "+" + updatedScore;
-                        }
-                        if (!updatedScore.equals("0")) {
-                            updatedScore += " bước";
-                            updatedScoreList.add(updatedScore);
+                            String updatedScore = Integer.toString(nextScore - prevScore);
+                            if (Integer.parseInt(updatedScore) > 0) {
+                                updatedScore = "+" + updatedScore;
+                            }
+                            if (!updatedScore.equals("0")) {
+                                updatedScore += " bước";
+                                updatedScoreList.add(updatedScore);
 
-                            HBox notiMessage = new HBox();
-                            Text textUsername = new Text(this.userName);
-                            Text textScore = new Text(updatedScore);
-                            textUsername.getStyleClass().add("noti-text-username");
-                            textScore.getStyleClass().add("noti-text");
-                            notiMessage.getChildren().addAll(textUsername, textScore);
-                            notiBoard.getChildren().add(notiMessage);
-                            scrollPane.setVvalue(1D);
-                        }
-                        scoreResult.setText(getCurrentScore());
-                        questionResult.setText(getCurrentQuestion());
-                    });
+                                HBox notiMessage = new HBox();
+                                Text textUsername = new Text(this.userName);
+                                Text textScore = new Text(updatedScore);
+                                textUsername.getStyleClass().add("noti-text-username");
+                                textScore.getStyleClass().add("noti-text");
+                                notiMessage.getChildren().addAll(textUsername, textScore);
+                                notiBoard.getChildren().add(notiMessage);
+                                scrollPane.setVvalue(1D);
+                            }
+                            scoreResult.setText(getCurrentScore());
+                            questionResult.setText(getCurrentQuestion());
+                        });
+                    } else if (updateGameStatus() == "winnerFound") {
+                        MainClient.stage.setScene(MainClient.messageScence.getScene());
+                    }
                 }
                 else {
                 	break;

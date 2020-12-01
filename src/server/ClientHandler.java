@@ -19,7 +19,7 @@ public class ClientHandler extends Thread {
 	
 	private final DataInputStream inputStream;
 	private final DataOutputStream outputStream;
-	private final int limitedAnswerTime = 10;						// seconds
+	private final int limitedAnswerTime = 25;						// seconds
 	private Socket client;
 	private Player player;
 	private int maxNumPlayers;

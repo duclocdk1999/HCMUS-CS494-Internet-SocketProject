@@ -7,7 +7,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="575.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
+<?import java.net.URL?>
+<fx:root prefHeight="575.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" type="AnchorPane">
+    <stylesheets>
+        <URL value="@css/root.css" />
+        <URL value="@css/message-scene.css" />
+    </stylesheets>
     <ImageView fitHeight="575.0" fitWidth="800.0" pickOnBounds="true">
         <Image url="@resources/background/background-waitroom.png" />
     </ImageView>
@@ -25,4 +30,4 @@
             </styleClass>
         </Text>
     </VBox>
-</AnchorPane>
+</fx:root>
