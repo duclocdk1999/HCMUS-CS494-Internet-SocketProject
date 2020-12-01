@@ -95,16 +95,27 @@ public class MainServer extends Thread {
 	public void run() {
 		
 		try {
-
+			
+			boolean foundWinner = false, allLose = false;
+			
 			for (int i = 0; i < 2; i++) {					// loop 2 times to send last result to client
 				do {
+					if (!foundWinner) {
+						System.out.println("found no winner...");
+					}
+					
+					if (!allLose) {
+						System.out.println("all players have not losed yet...");
+					}
+					
 					generatePlayersThread();
 					registerBeforeGame();
 					generateQuestionsForPlayersInRoom();
 					sendQuestionToPlayers();
 					waitForPlayersAnswers();
+					
 				}	
-				while (!foundWinningPlayer() && !allPlayersLose());
+				while (!(foundWinner = foundWinningPlayer()) && !(allLose = allPlayersLose()));
 			}
 			closePlayersThreads();
 		}

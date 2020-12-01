@@ -177,7 +177,7 @@ public class ClientHandler extends Thread {
 				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 	// -----------------------------------------------------------------------------
 	public static boolean foundWinningPlayer(int roomId, int maxScore) {
@@ -228,15 +228,15 @@ public class ClientHandler extends Thread {
 	}
 	// -----------------------------------------------------------------------------
 	private void sendGameStatus() throws IOException {
-		
-		if (ClientHandler.foundWinningPlayer(roomId, maxScore)) {
-			
-			this.outputStream.writeUTF("EndGame_WinnerFound");
-		}
-		else 
+
 		if (this.player.isLose()){
 			
 			this.outputStream.writeUTF("EndGame_Lose");
+		}
+		else
+		if (ClientHandler.foundWinningPlayer(roomId, maxScore)) {
+			
+			this.outputStream.writeUTF("EndGame_WinnerFound");
 		}
 		else {
 			
@@ -288,7 +288,8 @@ public class ClientHandler extends Thread {
 		if (fastestPlayer != null) {
 			
 			if (fastestPlayer.getName().equals(this.player.getName())) {
-				this.player.addScore(bonus);
+				if (bonus > 0)
+					this.player.addScore(bonus);
 				fasttestPlayers.set(roomId, null);
 				losePoints.set(roomId, 0);
 			}
