@@ -25,8 +25,8 @@
 
 .racing-countdown {
   -fx-font-family: 'iCielBC OldStyle';
-  -fx-font-size: 26;
-  -fx-fill: -fx-mustard;
+  -fx-font-size: 22;
+  -fx-fill: -fx-beige;
 }
 
 .racing-info-text {
@@ -64,6 +64,12 @@
 .racing-numbers {
   -fx-font-size: 28;
   -fx-fill: -fx-mustard;
+}
+
+.racing-alert-text {
+  -fx-font-size: 15;
+  -fx-font-family: 'iCielBC OldStyle';
+  -fx-fill: -fx-peachred;
 }
 
 .disabled-text {

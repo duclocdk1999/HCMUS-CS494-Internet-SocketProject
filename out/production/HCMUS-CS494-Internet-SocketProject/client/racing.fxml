@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -27,18 +28,42 @@
       <Image url="@resources/background/background-waitroom.png" />
    </ImageView>
    <AnchorPane minHeight="-Infinity" prefHeight="150.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <Text fx:id="scoreResult" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" text="0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="10.0" />
-      <Text fx:id="racingCounter" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <HBox AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="58.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" text="          " />
+            <Text fx:id="scoreResult" layoutX="10.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" text="0" />
+         </children>
+      </HBox>
+      <Circle fill="#ffffff00" radius="20.0" stroke="#e6e1d0" strokeType="INSIDE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+      <Circle fill="#ffffff00" layoutX="35.0" layoutY="35.0" radius="17.0" stroke="#e6e1d0" strokeType="INSIDE" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0" />
+      <Text fx:id="racingCounter" layoutX="5.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" text="0" textAlignment="CENTER" wrappingWidth="39.85184288024902" AnchorPane.leftAnchor="4.5" AnchorPane.topAnchor="9.0" />
       <Button fx:id="goHomeBtn" mnemonicParsing="false" styleClass="button-text" text="về nhà" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
       </Button>
       <VBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0" spacing="15.0" AnchorPane.leftAnchor="206.25" AnchorPane.topAnchor="20.0">
-         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="0.0" prefWidth="500.0" spacing="25.0" VBox.vgrow="ALWAYS">
-            <Text fx:id="questionResult" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-numbers" />
+         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="0.0" prefWidth="500.0" spacing="25.0">
+            <children>
+               <Text fx:id="questionCounterText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-label-text" wrappingWidth="89.947998046875" />
+               <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="500.0" spacing="25.0">
+                  <Text fx:id="questionResult" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-numbers" />
+               </HBox>
+            </children>
          </HBox>
          <HBox alignment="CENTER" prefHeight="0.0" prefWidth="800.0" spacing="10.0">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-label-text" text="Câu trả lời" />
             <TextField fx:id="inputResult" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="265.0" promptText="..." styleClass="textfield-style" />
             <Button fx:id="submitResult" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" styleClass="button-rounded" text="Gửi" />
+         </HBox>
+         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="0.0" prefWidth="500.0" spacing="25.0">
+            <children>
+               <Text fill="#f44336" strokeType="OUTSIDE" strokeWidth="0.0" text="username đã rời phòng">
+                  <font>
+                     <Font name="iCielBC OldStyle Regular" size="15.0" />
+                  </font>
+               </Text>
+            </children>
+            <VBox.margin>
+               <Insets top="-5.0" />
+            </VBox.margin>
          </HBox>
       </VBox>
       <VBox prefHeight="0.0" prefWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="10.0">

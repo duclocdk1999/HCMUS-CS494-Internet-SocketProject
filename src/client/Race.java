@@ -37,7 +37,7 @@ public class Race extends AnchorPane implements Initializable {
     public PlayerConnector connector;
 
     @FXML
-    Text questionResult, scoreResult, racingUILength, racingUIRoom, racingCounter;
+    Text questionResult, scoreResult, racingUILength, racingUIRoom, racingCounter, questionCounterText;
 
     @FXML
     AnchorPane anchorPaneContainer;
@@ -56,8 +56,6 @@ public class Race extends AnchorPane implements Initializable {
 
     @FXML
     Button submitResult, goHomeBtn;
-
-    int questionCounter = 0;
 
     Scene scene;
 
@@ -81,9 +79,8 @@ public class Race extends AnchorPane implements Initializable {
         KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
-                timeSeconds--;
-                racingCounter.setText(Integer.toString(timeSeconds));
-                if (timeSeconds < 0) {
+                racingCounter.setText(Integer.toString(--timeSeconds));
+                if (timeSeconds <= 0) {
                     time.stop();
                 }
 
@@ -222,8 +219,8 @@ public class Race extends AnchorPane implements Initializable {
         String host;
         int port;
 
-        int timer = 60;
-        String imgName;
+        int questionCounter = 0;
+
         String maxScore;
         String score;
         String question;
@@ -298,8 +295,7 @@ public class Race extends AnchorPane implements Initializable {
         public boolean updateQuestion() {
             try {
                 question = this.inputStream.readUTF();
-                ++questionCounter;
-                System.out.println("finalQuesition: "+questionCounter);
+                ++this.questionCounter;
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -338,11 +334,13 @@ public class Race extends AnchorPane implements Initializable {
  
         		this.gameStatus = this.inputStream.readUTF();
         		System.out.println("game status: " + this.gameStatus);
-        		
-        		if (this.gameStatus.equals("ContinueGame")) {
-        			return true;        			
+
+        		if (!this.gameStatus.equals("ContinueGame")) {
+        		    // Chuyển sang trang message kèm câu lệnh thua
+                    // Hiện noti để biết ai mới left
+        			return false;
         		}
-        		return false;
+        		return true;
         	}
         	catch (IOException e) {
         		e.printStackTrace();
@@ -426,9 +424,6 @@ public class Race extends AnchorPane implements Initializable {
                             break;
                     }
 
-                    if (userName.equals(this.userName)) {
-                        this.imgName = imgURLs[co];
-                    }
                     hbox.getChildren().addAll(imageViewNode, textNode, scoreNode);
                     scoreboardHBox.add(hbox);
                 }
@@ -494,17 +489,23 @@ public class Race extends AnchorPane implements Initializable {
         @Override
         public void run() {
             while (thread != null) {
-                System.out.println("Run..."+ questionCounter + "-" + maxScore);
-                if (questionCounter == Integer.parseInt(maxScore)) {
-//                    boolean tmp = updateScore() && updateOtherScores();
-                    // chúc bạn may mắn lần sau!
-                    // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
-                    // chuyển trang
-
-                    return;
-                }
+                System.out.println("Run..."+ this.questionCounter + "-" + maxScore);
+//                if (questionCounter == Integer.parseInt(maxScore)) {
+////                    boolean tmp = updateScore() && updateOtherScores();
+//                    // chúc bạn may mắn lần sau!
+//                    // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
+//                    // chuyển trang
+//
+//                    return;
+//                }
 
                 if (updateScore() && updateQuestion() && updateOtherScores() && updateGameStatus()) {
+                    String questionCounterString = "Câu " + Integer.toString(this.questionCounter) + ":";
+                    if (this.questionCounter < 10) {
+                        questionCounterString = "Câu 0" + Integer.toString(this.questionCounter) + ":";
+                    }
+                    questionCounterText.setText(questionCounterString);
+
                     time.playFromStart();
                     timeSeconds = STARTTIME;
 
