@@ -229,7 +229,7 @@ public class Race extends AnchorPane implements Initializable {
         String score;
         String question;
         String otherScores;
-
+        String gameStatus;										// "EndGame_WinnerFound", "EndGame_Lose", "ContinueGame"
 
         public PlayerConnector(String host, int port, String userName) {
             this.host = host;
@@ -328,16 +328,23 @@ public class Race extends AnchorPane implements Initializable {
         // ---------------------------------------------------------------------------------
         public String updateGameStatus() {
         	/*
-        	 * return true if game is continue, false if game is over (winner found)
+        	 * return true if game is continue, false if game is over (winner found, player lose)
+        	 * 3 types of gameStatus:
+        	 * 			"ContinueGame"
+        	 * 			"EndGame_Lose"
+        	 * 			"Endgame_WinnerFound"
         	 * */
         	
         	try {
+ 
+        		this.gameStatus = this.inputStream.readUTF();
+        		System.out.println("game status: " + this.gameStatus);
         		
-        		String status = this.inputStream.readUTF();
-        		System.out.println("game status: " + status);
-
-                return status;
-            }
+        		if (this.gameStatus.equals("ContinueGame")) {
+        			return true;        			
+        		}
+        		return false;
+        	}
         	catch (IOException e) {
         		e.printStackTrace();
         		return "Failed";

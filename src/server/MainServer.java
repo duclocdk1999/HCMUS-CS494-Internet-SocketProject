@@ -8,9 +8,10 @@ import java.net.Socket;
 public class MainServer extends Thread {
 	
 	private static final int port = 8080;
-	private static final int maxScore = 4;						// maximum score to win game
+	private static final int maxScore = 3;						// maximum score to win game
 	private static final int maxNumPlayers = 2;					// maximum number of players per room
 	private static final int maxNumRooms = 3;					// maximum number of room concurrently
+	private static final int limitedAnswerTime = 60;			// 60 seconds waiting for each question
 	private static ServerSocket listener;
 	
 	private int roomId;
@@ -36,7 +37,7 @@ public class MainServer extends Thread {
 	private void generatePlayersThread() throws IOException {
 		
 		for (int i = 0; i < maxNumPlayers; i ++) {
-			clientHandlers[i] = new ClientHandler(clients[i], roomId, maxNumPlayers, maxScore, maxNumRooms);
+			clientHandlers[i] = new ClientHandler(clients[i], roomId, maxNumPlayers, maxScore, maxNumRooms, limitedAnswerTime);
 		}		
 	}
 	// ----------------------------------------------------------------------------------
@@ -72,6 +73,11 @@ public class MainServer extends Thread {
 		return ClientHandler.foundWinningPlayer(roomId, maxScore);
 	}
 	// ----------------------------------------------------------------------------------
+	public boolean allPlayersLose() {
+		
+		return ClientHandler.allPlayersLose(roomId);
+	}
+	// ----------------------------------------------------------------------------------
 	public void closePlayersThreads() throws IOException {
 
 		ClientHandler.clearRegisteredNames(roomId);
@@ -89,18 +95,28 @@ public class MainServer extends Thread {
 	public void run() {
 		
 		try {
-// 			for (int questionIndex = 0; questionIndex < maxScore; questionIndex ++) {
-
-			for (int i = 0; i < 2; i++)
-			do {
-				generatePlayersThread();
-				registerBeforeGame();
-				generateQuestionsForPlayersInRoom();
-				sendQuestionToPlayers();
-				waitForPlayersAnswers();
-			}	
-			while (foundWinningPlayer() == false);
 			
+			boolean foundWinner = false, allLose = false;
+			
+			for (int i = 0; i < 2; i++) {					// loop 2 times to send last result to client
+				do {
+					if (!foundWinner) {
+						System.out.println("found no winner...");
+					}
+					
+					if (!allLose) {
+						System.out.println("all players have not losed yet...");
+					}
+					
+					generatePlayersThread();
+					registerBeforeGame();
+					generateQuestionsForPlayersInRoom();
+					sendQuestionToPlayers();
+					waitForPlayersAnswers();
+					
+				}	
+				while (!(foundWinner = foundWinningPlayer()) && !(allLose = allPlayersLose()));
+			}
 			closePlayersThreads();
 		}
 		catch (IOException | InterruptedException e) {
