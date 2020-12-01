@@ -189,7 +189,7 @@ public class ClientHandler extends Thread {
 		List<Player> players = new ArrayList<>(ClientHandler.socketPlayerMap.get(roomId).values());
 		for (Player player: players) {
 			
-			if (player.getScore().equals(maxScore)) {
+			if (player.getScore() >= maxScore) {
 				
 				return true;
 			}
