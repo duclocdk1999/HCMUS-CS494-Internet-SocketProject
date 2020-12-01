@@ -207,9 +207,12 @@ public class Race extends AnchorPane implements Initializable {
                 thread.start();
 
                 String status = info.split(" ")[0];
-                String maxNumQuestions = info.split(" ")[3];
+
 
                 if (status.equals("successful")) {
+                    String maxNumQuestions = info.split(" ")[3];
+                    System.out.println("maxNumQuestions"+maxNumQuestions);
+
                     System.out.println(userName + " logged in successfully");
                     connected.put("status", "true");
 
@@ -237,7 +240,7 @@ public class Race extends AnchorPane implements Initializable {
                 return connected;
             }
         }
-
+        // ------------------------------------------------------------------------------------
         public boolean updateScore() {
             try {
                 score = this.inputStream.readUTF();
@@ -260,7 +263,7 @@ public class Race extends AnchorPane implements Initializable {
                 return false;
             }
         }
-        // ---------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------
         public boolean updateOtherScores() {
         	/*
         	 * written by: Loc
@@ -278,7 +281,28 @@ public class Race extends AnchorPane implements Initializable {
         		return false;
         	}
         }
-
+        // ---------------------------------------------------------------------------------
+        public boolean updateGameStatus() {
+        	/*
+        	 * return true if game is continue, false if game is over (winner found)
+        	 * */
+        	
+        	try {
+        		
+        		String status = this.inputStream.readUTF();
+        		System.out.println("game status: " + status);
+        		
+        		if (status.equals("winnerNotFound")) {
+        			return true;        			
+        		}
+        		return false;
+        	}
+        	catch (IOException e) {
+        		e.printStackTrace();
+        		return false;
+        	}
+        }
+        // ---------------------------------------------------------------------------------
         private void updateOtherPlayerUI(String otherScores) {
             String[] imgURLs = {"banhmi", "chair", "nonla", "toong", "fin"};
             String[] playersScore = otherScores.split(" ");
@@ -367,13 +391,13 @@ public class Race extends AnchorPane implements Initializable {
 
             Platform.runLater(()->{
                 gridPaneSmallScore.getChildren().clear();
-                int counter = 0;
+                int counter = scoreboardHBox.size()-1;
                 for (int x = 0; x < 2; x++) {
-                    if (counter > playersScore.length) break;
+                    if (counter < 0) break;
                     for (int y = 0; y < 2; y++) {
                         gridPaneSmallScore.add(scoreboardHBox.get(counter), x, y);
-                        counter++;
-                        if (counter > playersScore.length) break;
+                        --counter;
+                        if (counter < 0) break;
                     }
                 }
             });
@@ -425,16 +449,16 @@ public class Race extends AnchorPane implements Initializable {
         public void run() {
             while (thread != null) {
                 System.out.println("Run..."+ questionCounter + "-" + maxNumberQuestion);
-                if (questionCounter == Integer.parseInt(maxNumberQuestion)) {
-//                    boolean tmp = updateScore() && updateOtherScores();
-                    // chúc bạn may mắn lần sau!
-                    // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
-                    // chuyển trang
-                    System.out.println("hú final");
-                    System.out.println("finalscore: " + score);
-                    return;
-                }
-                if (updateScore() && updateQuestion() && updateOtherScores()) {
+//                if (questionCounter == Integer.parseInt(maxNumberQuestion)) {
+////                    boolean tmp = updateScore() && updateOtherScores();
+//                    // chúc bạn may mắn lần sau!
+//                    // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
+//                    // chuyển trang
+//
+//                    return;
+//                }
+                if (updateScore() && updateQuestion() && updateOtherScores() && updateGameStatus()) {
+                	                	
                     Platform.runLater(()->{
                         submitResult.setDisable(false);
 

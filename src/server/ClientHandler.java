@@ -19,11 +19,11 @@ public class ClientHandler extends Thread {
 	
 	private final DataInputStream inputStream;
 	private final DataOutputStream outputStream;
-	private final int limitedAnswerTime = 30;						// seconds
+	private final int limitedAnswerTime = 60;						// seconds
 	private Socket client;
 	private Player player;
 	private int maxNumPlayers;
-	private int maxNumQuestions;
+	private int maxScore;
 	private int roomId;
 	
 	private static List<Map<Socket, Player>> socketPlayerMap;		// client (Socket) --> name (String)
@@ -34,19 +34,20 @@ public class ClientHandler extends Thread {
 	private static String operators;	
 	private static Integer numPlayers;								// number of available successful registered players
 	// -----------------------------------------------------------------------------
-	public ClientHandler(Socket client, int roomId, int maxNumPlayers, int maxNumQuestions, int maxNumRooms) throws IOException {
+	public ClientHandler(Socket client, int roomId, int maxNumPlayers, int maxScore, int maxNumRooms) throws IOException {
 		
 		this.client = client;
 		this.roomId = roomId;
 		this.inputStream = new DataInputStream(client.getInputStream());
 		this.outputStream = new DataOutputStream(client.getOutputStream());
 		this.maxNumPlayers = maxNumPlayers;
-		this.maxNumQuestions = maxNumQuestions;
+		this.maxScore = maxScore;
 		
 		if (socketPlayerMap == null || operators == null || fastestPlayers == null) {
 			socketPlayerMap = new ArrayList<>();
 			fastestPlayers = new ArrayList<>();
 			losePoints = new ArrayList<>();
+			
 
 			for (int i = 0; i < maxNumRooms; i++) {
 				socketPlayerMap.add(new HashMap<>());
@@ -54,6 +55,7 @@ public class ClientHandler extends Thread {
 				losePoints.add(0);
 			}			
 			operators = "+-*/%";
+//			operators = "+";
 		}
 		else {
 			this.player = socketPlayerMap.get(roomId).get(this.client);
@@ -101,7 +103,7 @@ public class ClientHandler extends Thread {
 					this.outputStream.writeUTF("successful " 
 											+ this.roomId + " " 
 											+ this.maxNumPlayers + " " 
-											+ this.maxNumQuestions + " " 
+											+ this.maxScore + " " 
 											+ numPlayers);
 					break;
 				}
@@ -157,6 +159,23 @@ public class ClientHandler extends Thread {
 		ClientHandler.questions[roomId].generateRandom();
 	}
 	// -----------------------------------------------------------------------------
+	public static boolean foundWinningPlayer(int roomId, int maxScore) {
+		
+		/*
+		 * Check if this roomId had a player with maximum score
+		 * */
+		
+		List<Player> players = new ArrayList<>(ClientHandler.socketPlayerMap.get(roomId).values());
+		for (Player player: players) {
+			
+			if (player.getScore().equals(maxScore)) {
+				
+				return true;
+			}
+		}
+		return false;
+	}
+	// -----------------------------------------------------------------------------
 	private void sendCurrentPlayerScoreAndQuestion() throws IOException {
 	
 		/*
@@ -187,6 +206,18 @@ public class ClientHandler extends Thread {
 		this.outputStream.writeUTF(records);
 	}
 	// -----------------------------------------------------------------------------
+	private void sendGameStatus() throws IOException {
+		
+		if (ClientHandler.foundWinningPlayer(roomId, maxScore)) {
+			
+			this.outputStream.writeUTF("winnerFound");
+		}
+		else {
+			
+			this.outputStream.writeUTF("winnerNotFound");
+		}
+	}
+	// -----------------------------------------------------------------------------
 	private String getAnswerFromPlayer() throws IOException {
 		
 		String answer = "";
@@ -204,7 +235,10 @@ public class ClientHandler extends Thread {
 		
 		if (this.test(questions[roomId], answer)) {
 
-			this.player.addScore(1);			
+			this.player.addScore(1);
+			
+
+			
 			if (fastestPlayers.get(roomId) == null) {
 				fastestPlayers.set(roomId, this.player);
 			}
@@ -249,14 +283,19 @@ public class ClientHandler extends Thread {
 				this.inputStream.readUTF();
 			}
 			
-			bonusPointForFastestPlayer();
+			bonusPointForFastestPlayer();			
 			sendCurrentPlayerScoreAndQuestion();
 			sendOtherPlayerScores();
-			waitForAnswer();
+			sendGameStatus();
 			
-			String answer = getAnswerFromPlayer();
-			checkAnswerAndUpdateScore(answer);
-			socketPlayerMap.get(roomId).put(this.client, this.player);			
+			if (ClientHandler.foundWinningPlayer(roomId, maxScore) == false) {
+				waitForAnswer();
+				
+				String answer = getAnswerFromPlayer();
+				checkAnswerAndUpdateScore(answer);
+			}
+			
+			socketPlayerMap.get(roomId).put(this.client, this.player);											
 			
 		} catch (IOException e) {
 			
