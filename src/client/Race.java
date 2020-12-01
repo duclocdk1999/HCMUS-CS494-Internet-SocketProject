@@ -160,6 +160,8 @@ public class Race extends AnchorPane implements Initializable {
             gridBottom.getChildren().add(dividerBottom);
         }
 
+        gridTop.setAlignment(Pos.CENTER);
+        gridBottom.setAlignment(Pos.CENTER);
         anchorPaneContainer.getChildren().add(gridTop);
         anchorPaneContainer.getChildren().add(gridBottom);
     }
@@ -283,108 +285,92 @@ public class Race extends AnchorPane implements Initializable {
 
             ArrayList<HBox> scoreboardHBox = new ArrayList<>();
 
-            int co = 0;
-            for (int i = 0; i < playersScore.length; i++) {
-                String userName = playersScore[i].split(":")[0];
-                String score = playersScore[i].split(":")[1];
-                int tmpScore = Integer.parseInt(score);
-                String urlPathRoad = "resources/player/player-" + imgURLs[i] + ".png";
-                ImageView playerImageRoad = createImageViewNode(urlPathRoad, 25);
-//                    gridTop.getChildren().clear();
-//                    gridBottom.getChildren().clear();
-//                     nhớ set if tmpScore <= 0
-//                    GridPane.setRowIndex(playerImageRoad, i);
-//                    GridPane.setColumnIndex(playerImageRoad, tmpScore-1);
-//
-//                    switch (i) {
-//                        case 0:
-//                        case 1:
-//                            gridTop.setRowSpan(playerImageRoad, GridPane.REMAINING);
-//                            gridTop.setHalignment(playerImageRoad, HPos.CENTER);
-//                            gridTop.setAlignment(Pos.CENTER);
-//                            gridTop.getChildren().add(playerImageRoad);
-//                            break;
-//                        case 2:
-//                        case 3:
-//                            gridBottom.setRowSpan(playerImageRoad, GridPane.REMAINING);
-//                            gridBottom.setHalignment(playerImageRoad, HPos.CENTER);
-//                            gridBottom.setAlignment(Pos.CENTER);
-//                            gridBottom.getChildren().add(playerImageRoad);
-//                            break;
-
-
-
-                HBox hbox = new HBox();
-                hbox.setAlignment(Pos.CENTER_LEFT);
-                hbox.setPrefHeight(100.0);
-                hbox.setPrefWidth(200.0);
-                hbox.setSpacing(8.0);
-
-                Text textNode = new Text(userName);
-                textNode.getStyleClass().add("player-small-text");
-
-                Text scoreNode = new Text(score);
-                scoreNode.getStyleClass().add("player-small-score");
-
-                if (co >= 4) co = -1;
-                String urlPath = "resources/player/player-" + imgURLs[++co] + ".png";
-                ImageView imageViewNode = createImageViewNode(urlPath, 25);
-
-
-                if (userName.equals(this.userName)) {
-                    this.imgName = imgURLs[co];
-                }
-                Platform.runLater(() -> {
-                    hbox.getChildren().addAll(imageViewNode, textNode, scoreNode);
-                    scoreboardHBox.add(hbox);
-                });
-            }
-
-            Platform.runLater(()->{
-                setRoadLength(this.maxNumberQuestion);
-                gridPaneSmallScore.getChildren().clear();
-                int counter = 0;
+            Platform.runLater(()-> {
+                int co = 0;
                 String urlPathRoad;
                 ImageView playerImageRoad;
+
+                gridTop.getColumnConstraints().clear();
+                gridTop.getRowConstraints().clear();
+                gridBottom.getColumnConstraints().clear();
+                gridBottom.getRowConstraints().clear();
+
+                gridTop.getChildren().clear();
+                gridBottom.getChildren().clear();
+
+                setRoadLength(this.maxNumberQuestion);
+
                 for (int i = 0; i < playersScore.length; i++) {
                     String userName = playersScore[i].split(":")[0];
                     String score = playersScore[i].split(":")[1];
                     int tmpScore = Integer.parseInt(score);
                     urlPathRoad = "resources/player/player-" + imgURLs[i] + ".png";
-                    playerImageRoad = createImageViewNode(urlPathRoad, 25);
-                    gridTop.getChildren().clear();
-                    gridBottom.getChildren().clear();
+                    playerImageRoad = createImageViewNode(urlPathRoad, 20);
 
-                    GridPane.setRowIndex(playerImageRoad, i);
-                    if (tmpScore > 0) {
+                    HBox hbox = new HBox();
+                    hbox.setAlignment(Pos.CENTER_LEFT);
+                    hbox.setPrefHeight(100.0);
+                    hbox.setPrefWidth(200.0);
+                    hbox.setSpacing(8.0);
+
+                    Text textNode = new Text(userName);
+                    textNode.getStyleClass().add("player-small-text");
+
+                    Text scoreNode = new Text(score);
+                    scoreNode.getStyleClass().add("player-small-score");
+
+                    if (co >= 4) co = -1;
+                    String urlPath = "resources/player/player-" + imgURLs[++co] + ".png";
+                    ImageView imageViewNode = createImageViewNode(urlPath, 25);
+
+
+                    if (tmpScore > 0)
                         GridPane.setColumnIndex(playerImageRoad, tmpScore - 1);
-                    } else {
+                    else
                         GridPane.setColumnIndex(playerImageRoad, 0);
-                    }
-
 
                     switch (i) {
                         case 0:
-                        case 1:
+                            GridPane.setRowIndex(playerImageRoad, 0);
                             gridTop.setRowSpan(playerImageRoad, GridPane.REMAINING);
                             gridTop.setHalignment(playerImageRoad, HPos.CENTER);
-                            gridTop.setAlignment(Pos.CENTER);
+                            gridTop.getChildren().add(playerImageRoad);
+                            break;
+                        case 1:
+                            GridPane.setRowIndex(playerImageRoad, 1);
+                            gridTop.setRowSpan(playerImageRoad, GridPane.REMAINING);
+                            gridTop.setHalignment(playerImageRoad, HPos.CENTER);
                             gridTop.getChildren().add(playerImageRoad);
                             break;
                         case 2:
-                        case 3:
+                            GridPane.setRowIndex(playerImageRoad, 0);
                             gridBottom.setRowSpan(playerImageRoad, GridPane.REMAINING);
                             gridBottom.setHalignment(playerImageRoad, HPos.CENTER);
-                            gridBottom.setAlignment(Pos.CENTER);
+                            gridBottom.getChildren().add(playerImageRoad);
+                            break;
+                        case 3:
+                            GridPane.setRowIndex(playerImageRoad, 1);
+                            gridBottom.setRowSpan(playerImageRoad, GridPane.REMAINING);
+                            gridBottom.setHalignment(playerImageRoad, HPos.CENTER);
                             gridBottom.getChildren().add(playerImageRoad);
                             break;
                     }
-                }
-                for (int x = 0; x < 2; x++) {
 
+                    if (userName.equals(this.userName)) {
+                        this.imgName = imgURLs[co];
+                    }
+                    hbox.getChildren().addAll(imageViewNode, textNode, scoreNode);
+                    scoreboardHBox.add(hbox);
+                }
+            });
+
+
+            Platform.runLater(()->{
+                gridPaneSmallScore.getChildren().clear();
+                int counter = 0;
+                for (int x = 0; x < 2; x++) {
                     if (counter > playersScore.length) break;
                     for (int y = 0; y < 2; y++) {
-                        System.out.println("adding to grid hbox: " + scoreboardHBox.get(counter).toString());
                         gridPaneSmallScore.add(scoreboardHBox.get(counter), x, y);
                         counter++;
                         if (counter > playersScore.length) break;
