@@ -38,7 +38,7 @@ public class Waitroom extends AnchorPane {
 
     public void initWaitingScene() {
         int numPlayers = 5, maxNumPlayers = 5, co = -1;
-
+        waitPlayerBox.getChildren().clear();
         /*
         * Set current number of players and the maximum players allowed
         * Format

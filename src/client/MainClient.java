@@ -14,6 +14,7 @@ public class MainClient extends Application {
     static Stage stage;
     public static Race raceScene;
     public static Waitroom waitScene;
+    public static Result messageScence;
     // The entire window is called stage, content inside the stage is the scene, in scene we will put the GUI => Stage and Scene methodlogy
     // method whenever our app is first launched
     // launch(args): method inside Application class, so whenever we starts our program, we start this method and this method will go into Application and prepare all the things needed
@@ -29,10 +30,11 @@ public class MainClient extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("menu.fxml"));
         Parent rootRules = FXMLLoader.load(getClass().getResource("rules.fxml"));
         Parent rootRegister = FXMLLoader.load(getClass().getResource("register.fxml"));
-        Parent rootMessage = FXMLLoader.load(getClass().getResource("message-scene.fxml"));
 
         raceScene = new Race();
         waitScene = new Waitroom();
+        messageScence = new Result();
+
         stage.setTitle("RACING ARENA - DAU TRUONG XE CO");
         stage.setResizable(false);
 
@@ -61,11 +63,11 @@ public class MainClient extends Application {
         raceScene.getScene().getStylesheets().add(getClass().getResource("css/racing.css").toExternalForm());
 
         // Layout 6
-        rootMessage.getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
-        rootMessage.getStylesheets().add(getClass().getResource("css/message-scene.css").toExternalForm());
+        messageScence.getScene().getStylesheets().add(getClass().getResource("css/root.css").toExternalForm());
+        messageScence.getScene().getStylesheets().add(getClass().getResource("css/message-scene.css").toExternalForm());
         // chúc bạn may mắn lần sau!
         // nhờ ý chí kiên cuờng và luôn vững chãi /n bạn đã giành chiến thắng!
-        scene6 = new Scene(rootMessage, 800, 575);
+//        scene6 = new Scene(rootMessage, 800, 575);
 
         stage.setScene(scene1);
         stage.show();

@@ -30,8 +30,8 @@
    <AnchorPane minHeight="-Infinity" prefHeight="150.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       <HBox AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="58.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" text="          " />
-            <Text fx:id="scoreResult" layoutX="10.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" text="0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-countdown" text="Điểm: " />
+            <Text fx:id="scoreResult" layoutX="10.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-numbers" text="0" />
          </children>
       </HBox>
       <Circle fill="#ffffff00" radius="20.0" stroke="#e6e1d0" strokeType="INSIDE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
@@ -55,10 +55,7 @@
          </HBox>
          <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="0.0" prefWidth="500.0" spacing="25.0">
             <children>
-               <Text fill="#f44336" strokeType="OUTSIDE" strokeWidth="0.0" text="username đã rời phòng">
-                  <font>
-                     <Font name="iCielBC OldStyle Regular" size="15.0" />
-                  </font>
+               <Text fx:id="notiMessage" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-noti-message">
                </Text>
             </children>
             <VBox.margin>
@@ -137,7 +134,7 @@
 <!--            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-track-score" text="+1" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />-->
 <!--            <Text layoutX="72.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-track-score" text="-3" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />-->
 <!--         </GridPane>-->
-<!--         <GridPane fx:id="gridPaneBottom" alignment="CENTER" layoutX="33.0" layoutY="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="800.0" styleClass="racing-grid" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">-->
+<!--         <GridPane fx:id="gridPaneBottom" alignment="BOTTOM_LEFT" layoutX="33.0" layoutY="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">-->
 <!--            <columnConstraints>-->
 <!--               <ColumnConstraints hgrow="NEVER" maxWidth="133.0" minWidth="10.0" prefWidth="55.0" />-->
 <!--               <ColumnConstraints hgrow="NEVER" maxWidth="217.0" minWidth="10.0" prefWidth="138.0" />-->
@@ -146,6 +143,11 @@
 <!--               <ColumnConstraints hgrow="NEVER" maxWidth="220.0" minWidth="10.0" prefWidth="138.0" />-->
 <!--               <ColumnConstraints maxWidth="175.0" minWidth="7.0" prefWidth="138.0" />-->
 <!--               <ColumnConstraints maxWidth="95.0" minWidth="0.0" prefWidth="55.0" />-->
+<!--               <ColumnConstraints />-->
+<!--               <ColumnConstraints />-->
+<!--               <ColumnConstraints />-->
+<!--               <ColumnConstraints />-->
+<!--               <ColumnConstraints />-->
 <!--            </columnConstraints>-->
 <!--            <rowConstraints>-->
 <!--               <RowConstraints minHeight="10.0" prefHeight="72.5" vgrow="NEVER" />-->
@@ -159,10 +161,17 @@
 <!--            <Line endY="145.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="5" GridPane.halignment="LEFT" GridPane.rowSpan="2147483647" />-->
 <!--            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-track-score" text="-1" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />-->
 <!--            <Text layoutX="72.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="racing-track-score" text="+2" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />-->
-<!--            <ImageView fitHeight="58.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="player-small-icon" GridPane.columnIndex="2" GridPane.halignment="CENTER">-->
+<!--            <ImageView fitHeight="58.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="player-small-icon" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">-->
 <!--               <Image url="@resources/player/player-fin.png" />-->
 <!--            </ImageView>-->
 <!--            <Line endY="145.0" layoutX="628.0" layoutY="10.0" stroke="WHITE" strokeWidth="2.0" styleClass="racing-dashed-line" GridPane.columnIndex="6" GridPane.columnSpan="6" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="TOP" GridPane.vgrow="SOMETIMES" />-->
+<!--            <HBox alignment="CENTER" GridPane.columnIndex="2">-->
+<!--               <children>-->
+<!--                  <ImageView fitHeight="58.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="player-small-icon" HBox.hgrow="SOMETIMES">-->
+<!--                     <Image url="@resources/player/player-fin.png" />-->
+<!--                  </ImageView>-->
+<!--               </children>-->
+<!--            </HBox>-->
 <!--         </GridPane>-->
       </AnchorPane>
    </AnchorPane>
