@@ -19,7 +19,7 @@ public class Question {
 		number02 = random.nextInt(20000) - 10000;
 		
 		operatorIndex = random.nextInt(5);
-		if (operatorIndex == 3 && number02 == 0) {
+		if ((operatorIndex == 3 || operatorIndex == 4) && number02 == 0) {
 			generateRandom();
 		}
 	}

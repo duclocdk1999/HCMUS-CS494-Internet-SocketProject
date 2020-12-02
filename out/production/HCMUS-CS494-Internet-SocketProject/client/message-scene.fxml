@@ -25,7 +25,7 @@
                <String fx:value="message-score-text" />
             </styleClass>
          </Text>
-         <Text fx:id="messageScore" layoutX="346.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="20">
+         <Text fx:id="messageScore" layoutX="346.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0">
             <styleClass>
                <String fx:value="mustard-text" />
                <String fx:value="message-score" />

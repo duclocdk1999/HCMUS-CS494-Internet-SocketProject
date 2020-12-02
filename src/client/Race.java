@@ -2,8 +2,6 @@ package client;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -64,7 +62,7 @@ public class Race extends AnchorPane implements Initializable {
 
     GridPane gridTop, gridBottom;
 
-    private static final Integer STARTTIME = 25;
+    private static final Integer STARTTIME = 70;
     private Timeline time;
     private Integer timeSeconds = STARTTIME;
 
@@ -142,10 +140,10 @@ public class Race extends AnchorPane implements Initializable {
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
     }
-    private void goToMessageScene(String gameStatus, String score) {
+    private void goToMessageScene(String gameStatus, String score, int maxScore) {
         Platform.runLater(() -> {
             MainClient.messageScence.setScore(score);
-            if (gameStatus == "EndGame_Lose")
+            if (Integer.parseInt(score) < maxScore)
                 MainClient.messageScence.setMessage(false);
             else {
                 MainClient.messageScence.setMessage(true);
@@ -410,7 +408,14 @@ public class Race extends AnchorPane implements Initializable {
             if (oldPlayersScore.length != playersScore.length) {
                 // find players not in oldPlayersScore
                 String[] both = findDifferencesInArrays(oldPlayersScore, playersScore);
-                notiMessage.setText(both[0].split(":")[0]+" đã thua và rời phòng");
+                String playersString = "";
+                for (int i = 0; i < both.length; i++) {
+                    if (i == both.length-1)
+                        playersString += both[i].split(":")[0];
+                    else
+                        playersString += both[i].split(":")[0]+", ";
+                }
+                notiMessage.setText(playersString+" đã thua và rời phòng");
                 this.otherScores = otherScores;
             } else {
                 notiMessage.setText("");
@@ -590,7 +595,7 @@ public class Race extends AnchorPane implements Initializable {
                             });
                         } else {
                             resetSet();
-                            goToMessageScene(this.gameStatus, this.score);
+                            goToMessageScene(this.gameStatus, this.score, Integer.parseInt(this.maxScore));
                             break;
                         }
                     }

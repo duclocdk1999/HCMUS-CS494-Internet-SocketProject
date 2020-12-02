@@ -5,14 +5,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MainServer extends Thread {
 	
 	private static final int port = 8080;
-	private static final int maxScore = new Random().nextInt(26-3)+3;						// maximum score to win game
+	private static final int maxScore = ThreadLocalRandom.current().nextInt(4, 25 + 1);						// maximum score to win game
 	private static final int maxNumPlayers = 4;					// maximum number of players per room
 	private static final int maxNumRooms = 3;					// maximum number of room concurrently
-	private static final int limitedAnswerTime = 20;			// 60 seconds waiting for each question
+	private static final int limitedAnswerTime = 70;			// 60 seconds waiting for each question
 	private static ServerSocket listener;
 	
 	private int roomId;
