@@ -39,8 +39,6 @@ public class Controller {
 
     // -----------------------------------------------------------------------------------
     private void goToSceneIndicator(int nextScene, ActionEvent event) throws IOException {
-        System.out.println(nextScene);
-        
         String sceneName = sceneNames[nextScene];
         Parent root = FXMLLoader.load(getClass().getResource(sceneName));
         Scene scene = new Scene(root, 800, 575);
@@ -49,11 +47,6 @@ public class Controller {
         currentStage.setScene(scene);
     }
     // -----------------------------------------------------------------------------------
-    private void setTextResult(String text) {
-        System.out.println(text);
-    }
-    // -----------------------------------------------------------------------------------
-
     /* isFieldNotEmpty: Check if input is empty */
     private boolean isFieldNotEmpty(String value, Text errorHolder, String errorMessage) {
         if (value.trim().equals("") || value.length() == 0) {
@@ -164,25 +157,6 @@ public class Controller {
     private void goToRegisterScene(ActionEvent event) throws IOException {
         event.consume();
         goToSceneIndicator(2, event);
-    }
-
-    @FXML
-    private void goToWaitingScene(ActionEvent event) throws IOException {
-        event.consume();
-        goToSceneIndicator(3, event);
-    }
-
-    @FXML
-    private void goToGameScene(ActionEvent event) throws IOException {
-        event.consume();
-        goToSceneIndicator(4, event);
-    }
-
-    @FXML
-    private void goToResultScene(ActionEvent event, String value) throws IOException {
-        event.consume();
-        setTextResult(value);
-        goToSceneIndicator(5, event);
     }
 
     @FXML

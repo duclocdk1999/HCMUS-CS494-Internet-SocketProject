@@ -43,7 +43,6 @@ public class Connector {
 	public boolean register(String name) {
 		
 		try {
-			System.out.println("me-name: "+name);
 			this.outputStream.writeUTF(name);
 			String info = this.inputStream.readUTF();			// info format:	"successful roomId maxNumPlayers maxNumQuestions" | "failed"
 			String status = info.split(" ")[0];
@@ -108,10 +107,7 @@ public class Connector {
     	 * */
     	
     	try {
-    		
     		String status = this.inputStream.readUTF();
-    		System.out.println("game status: " + status);
-    		
     		if (status.equals("winnerNotFound")) {
     			return true;        			
     		}

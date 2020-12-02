@@ -4,14 +4,15 @@ import java.io.IOException;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 
 public class MainServer extends Thread {
 	
 	private static final int port = 8080;
-	private static final int maxScore = 26;						// maximum score to win game
-	private static final int maxNumPlayers = 2;					// maximum number of players per room
+	private static final int maxScore = new Random().nextInt(26-3)+3;						// maximum score to win game
+	private static final int maxNumPlayers = 4;					// maximum number of players per room
 	private static final int maxNumRooms = 3;					// maximum number of room concurrently
-	private static final int limitedAnswerTime = 25;			// 60 seconds waiting for each question
+	private static final int limitedAnswerTime = 20;			// 60 seconds waiting for each question
 	private static ServerSocket listener;
 	
 	private int roomId;
@@ -101,11 +102,11 @@ public class MainServer extends Thread {
 			for (int i = 0; i < 2; i++) {					// loop 2 times to send last result to client
 				do {
 					if (!foundWinner) {
-						System.out.println("found no winner...");
+						System.out.println("Found no winner...");
 					}
 					
 					if (!allLose) {
-						System.out.println("all players have not losed yet...");
+						System.out.println("All players have not lost yet...");
 					}
 					
 					generatePlayersThread();

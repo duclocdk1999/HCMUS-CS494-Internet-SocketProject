@@ -6,3 +6,12 @@
   -fx-font-family: 'iCielBC OldStyle';
   -fx-font-size: 30;
 }
+
+.message-score-text {
+  -fx-font-family: 'iCielBC OldStyle';
+  -fx-font-size: 20;
+}
+
+.message-score {
+  -fx-font-size: 28;
+}

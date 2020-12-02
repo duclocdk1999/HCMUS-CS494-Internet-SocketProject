@@ -1,13 +1,9 @@
 package client;
 
-import com.sun.tools.javac.Main;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -70,7 +66,6 @@ public class Race extends AnchorPane implements Initializable {
 
     private static final Integer STARTTIME = 25;
     private Timeline time;
-    private Label timerLabel = new Label();
     private Integer timeSeconds = STARTTIME;
 
     public void doTime() {
@@ -78,20 +73,17 @@ public class Race extends AnchorPane implements Initializable {
 //        Timeline timeline;
 //        Integer timeSeconds = STARTTIME;
         time = new Timeline();
-        if (time!=null) {
+        if (time != null) {
             time.stop();
         }
         
         time.setCycleCount(Timeline.INDEFINITE);
-        KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                racingCounter.setText(Integer.toString(--timeSeconds));
-                if (timeSeconds <= 0) {
-                    time.stop();
-                }
-
+        KeyFrame frame = new KeyFrame(Duration.seconds(1), actionEvent -> {
+            racingCounter.setText(Integer.toString(--timeSeconds));
+            if (timeSeconds <= 0) {
+                time.stop();
             }
+
         });
         time.getKeyFrames().add(frame);
         time.playFromStart();
@@ -133,9 +125,10 @@ public class Race extends AnchorPane implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Racing Scene Initialized");
+        resetSet();
         goHomeBtn.setOnAction((event) -> {
             try {
-                goToSceneIndicator("menu",event);
+                goToSceneIndicator("menu");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -143,20 +136,21 @@ public class Race extends AnchorPane implements Initializable {
     }
 
     // -----------------------------------------------------------------------------------
-    private void goToSceneIndicator(String nextScene, ActionEvent event) throws IOException {
+    private void goToSceneIndicator(String nextScene) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(nextScene+".fxml"));
         Stage stage = (Stage) MainClient.stage.getScene().getWindow();
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
     }
-    private void goToMessageScene(String gameStatus) {
+    private void goToMessageScene(String gameStatus, String score) {
         Platform.runLater(() -> {
-            System.out.println("current ststua:" +gameStatus);
-            MainClient.messageScence.doTime(false);
-//            if (gameStatus == "EndGame_Lose")
-//
-//            else if (gameStatus == "EndGame_WinnerFound")
-//                MainClient.messageScence.doTime(true);
+            MainClient.messageScence.setScore(score);
+            if (gameStatus == "EndGame_Lose")
+                MainClient.messageScence.setMessage(false);
+            else {
+                MainClient.messageScence.setMessage(true);
+            }
+            MainClient.messageScence.doTime();
             MainClient.stage.setScene(MainClient.messageScence.getScene());
         });
     }
@@ -194,6 +188,21 @@ public class Race extends AnchorPane implements Initializable {
         GridPane.setRowSpan(divider, GridPane.REMAINING);
         GridPane.setHalignment(divider, HPos.LEFT);
         return divider;
+    }
+
+    private void clearGrid(GridPane gridPane) {
+        gridPane.getColumnConstraints().clear();
+        gridPane.getRowConstraints().clear();
+        gridPane.getChildren().clear();
+    }
+
+    private void resetSet() {
+        Platform.runLater(()->{
+            clearGrid(gridTop);
+            clearGrid(gridBottom);
+            clearGrid(gridPaneSmallScore);
+            notiBoard.getChildren().clear();
+        });
     }
 
     private void setRoadLength(String maxLength) {
@@ -285,7 +294,7 @@ public class Race extends AnchorPane implements Initializable {
 
         public HashMap connectToServer() {
             try {
-                System.out.println("userName:"+userName);
+                System.out.println("userName: "+userName);
                 socket = new Socket(host, port);
                 System.out.println("client is connected to " + host + " port " + port + "...");
                 inputStream = new DataInputStream(socket.getInputStream());
@@ -308,8 +317,6 @@ public class Race extends AnchorPane implements Initializable {
                     connected.put("status", "true");
 
                     this.maxScore = maxNumQuestions;
-                    System.out.println("debugger01");
-
                     doTime();
                     Platform.runLater(() -> setRoadLength(this.maxScore));
 
@@ -332,8 +339,6 @@ public class Race extends AnchorPane implements Initializable {
         public boolean updateScore() {
             try {
                 score = this.inputStream.readUTF();
-                System.out.println(score);
-
                 timeSeconds = STARTTIME;
                 return true;
             } catch (NumberFormatException | IOException e) {
@@ -362,7 +367,6 @@ public class Race extends AnchorPane implements Initializable {
         	try {
         	    String otherPlayerScores = this.inputStream.readUTF();
         	    if (this.otherScores == null) this.otherScores = otherPlayerScores;
-        		System.out.println("scores: [ " + this.otherScores + "]");
         		updateOtherPlayerUI(otherPlayerScores);
         		return true;
         	}
@@ -382,9 +386,7 @@ public class Race extends AnchorPane implements Initializable {
         	 * */
         	
         	try {
- 
         		this.gameStatus = this.inputStream.readUTF();
-        		System.out.println("game status: " + this.gameStatus);
 
         		if (!this.gameStatus.equals("ContinueGame")) {
         		    // Chuyển sang trang message kèm câu lệnh thua
@@ -422,14 +424,8 @@ public class Race extends AnchorPane implements Initializable {
                 String urlPathRoad;
                 ImageView playerImageRoad;
 
-                gridTop.getColumnConstraints().clear();
-                gridTop.getRowConstraints().clear();
-                gridBottom.getColumnConstraints().clear();
-                gridBottom.getRowConstraints().clear();
-
-                gridTop.getChildren().clear();
-                gridBottom.getChildren().clear();
-
+                clearGrid(gridTop);
+                clearGrid(gridBottom);
                 setRoadLength(this.maxScore);
 
                 for (int i = 0; i < playersScore.length; i++) {
@@ -537,7 +533,6 @@ public class Race extends AnchorPane implements Initializable {
         @Override
         public void run() {
             while (thread != null) {
-                System.out.println("Run..."+ this.questionCounter + "-" + maxScore);
                 if (updateScore() && updateQuestion() && updateOtherScores()) {
                         if (updateGameStatus()) {
                             time.playFromStart();
@@ -565,13 +560,14 @@ public class Race extends AnchorPane implements Initializable {
                             int nextScore = Integer.parseInt(getCurrentScore());
 
                             Platform.runLater(() -> {
-                                // nextScore: 1, đi tới index 0
-                                // nextScore: 5, đi tới index 4
-                                // ban đầu tất cả đều ở ngoài Bãi đậu
+                                scoreResult.setText(getCurrentScore());
+                                questionResult.setText(getCurrentQuestion());
+                                if (this.questionCounter-1 == 0) {
+                                    return;
+                                }
 
-//               <Image url="@resources/player/player-fin.png" />
-//            </ImageView>
                                 String updatedScore = Integer.toString(nextScore - prevScore);
+
                                 if (Integer.parseInt(updatedScore) > 0) {
                                     updatedScore = "+" + updatedScore;
                                 }
@@ -591,20 +587,19 @@ public class Race extends AnchorPane implements Initializable {
                                     notiBoard.getChildren().add(notiMessage);
                                     scrollPane.setVvalue(1D);
                                 }
-                                scoreResult.setText(getCurrentScore());
-                                questionResult.setText(getCurrentQuestion());
                             });
                         } else {
-                            System.out.println("Finish");
+                            resetSet();
+                            goToMessageScene(this.gameStatus, this.score);
                             break;
-//                            MainClient.stage.setScene(MainClient.messageScence.getScene());
                         }
                     }
                 else {
                 	break;
                 }
             }
-            goToMessageScene(this.gameStatus);
+
+
         }
     }
 }
