@@ -21,7 +21,7 @@ public class Question {
 		number01 = random.nextInt(10);
 		number02 = random.nextInt(10);
 		operatorIndex = random.nextInt(5);
-		if (operatorIndex == 3 && number02 == 0) {
+		if ((operatorIndex == 3 || operatorIndex == 4) && number02 == 0) {
 			generateRandom();
 		}
 	}
